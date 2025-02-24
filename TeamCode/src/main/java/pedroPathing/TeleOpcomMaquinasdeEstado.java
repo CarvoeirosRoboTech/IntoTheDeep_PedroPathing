@@ -3,73 +3,125 @@ package pedroPathing;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp com Maquinas de Estado", group = "Iterative OpMode")
 public class TeleOpcomMaquinasdeEstado extends OpMode {
 
-    DcMotor claw = null;
+    private DcMotor leftElevatorDrive   = null;
+    private DcMotor rightElevatorDrive  = null;
+    private DcMotor intakeSliderDrive = null;
+    private DcMotor intakeDrive = null;
+    private Servo   deliveryClaw = null;
+    private Servo   deliveryGyroLeft = null;
+    private Servo   deliveryGyroRight= null;
+    private Servo   deliveryGyro = null;
+    private Servo   intakeLeftGyro = null;
+    private Servo   intakeRightGyro = null;
     Gamepad controle;
-    private enum EstadoClaw{
-        CLAW_OPEN,
-        CLAW_CLOSED,
-        DEPOSIT_CLAW_OPEN_POS,
-        DEPOSIT_CLAW_CLOSE_POS
+
+    //Trava a posição do braço + garra dependendo da ação desejada;
+    private enum SetDeliveryStatus{
+        TRANSFER,
+        MIDDLE,
+        SPECIMEN
     }
 
-    private enum EstadoGyro{
-        GYRO_MIDDLE,
-        GYRO_TRANSFER,
-        GYRO_GET_SPECIMEN,
-        INTAKE_LEFT_GYRO_TRANSFER_POS,
-        INTAKE_RIGHT_GYRO_TRASNFER_POS,
-        INTAKE_LEFT_GYRO_INTAKING_POS,
-        INTAKE_RIGHT_GYRO_INTAKING_POS
+    private enum IntakeStatus{
+        INTAKING,
+        TRANSFER
     }
 
-    private enum EstadoSlides{
-        MAX_SLIDES_EXTENSION,
-        SLIDES_PIVOT_READY_EXTENSION,
-        LOW_BUCKET_HEIGHT,
-        HIGH_BUCKET_HEIGHT,
-        FRONT_HIGH_SPECIMEN_HEIGHT,
-        BACK_HIGH_SPECIMEN_HEIGHT,
-        BACK_HIGH_SPECIMEN_ATTACH_HEIGHT,
-        AUTO_ASCENT_HEIGHT,
-        ENDGAME_ASCENT_HEIGHT
-    }
-
-    private enum EstadoIntake{
-        INTAKE_EXTENSION_OUT,
-        INTAKE_EXTENSION_IN
-    }
-
-    EstadoClaw estadoClaw = EstadoClaw.CLAW_OPEN;
+    SetDeliveryStatus setDeliveryStatus = SetDeliveryStatus.TRANSFER. MIDDLE. SPECIMEN;
 
     @Override
-    public void init() {
-        claw = hardwareMap.get(DcMotor.class, "Garra");
+    public void init()
+    {
+        //Motores
+        rightElevatorDrive    = hardwareMap.get(DcMotor.class, "rightElevatorDrive"); // Nome na Driver Station Deverá ser o mesmo que o nome entre ""
+        leftElevatorDrive     = hardwareMap.get(DcMotor.class, "leftElevatorDrive");
+        intakeSliderDrive     = hardwareMap.get(DcMotor.class, "intakeSliderDrive");
+        intakeDrive           = hardwareMap.get(DcMotor.class, "intakeDrive");
 
+        rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeSliderDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        leftElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //Servos
+        deliveryClaw        = hardwareMap.get(Servo.class, "deliveryClaw");
+        deliveryGyro        = hardwareMap.get(Servo.class, "deliveryGyro");
+        deliveryGyroLeft    = hardwareMap.get(Servo.class, "deliveryGyroLeft");
+        deliveryGyroRight   = hardwareMap.get(Servo.class, "deliveryGyroRight");
+
+        intakeLeftGyro      = hardwareMap.get(Servo.class, "intakeGyroLeft");
+        intakeRightGyro     = hardwareMap.get(Servo.class, "intakeGyroRight");
+
+        deliveryClaw.setPosition(0);
+        deliveryGyro.setPosition(0);
+        deliveryGyroRight.setPosition(0);
+        deliveryGyroLeft.setPosition(0);
+
+        intakeRightGyro.setPosition(0);
+        intakeLeftGyro.setPosition(0);
+
+        telemetry.addData(">", "Hardware Initialized");
+        telemetry.update();
     }
+
+    public void setIntakePower(double power) {
+        intakeDrive.setPower(power);
+    }
+
+    public void setIntakeExtensionPower(double power) {
+        intakeSliderDrive.setPower(power);
+    }
+
+    public void setDeliveryGyroPosition(double position) {
+        deliveryGyro.setPosition(position);
+    }
+
     @Override
     public void loop() {
-        switch (estadoClaw) {
-            case CLAW_OPEN:
-                if (controle.cross)
-                {
-                    claw.setPower(0.4);
-                    estadoClaw = EstadoClaw.CLAW_OPEN;
+        switch (setDeliveryStatus)
+        {
+            case TRANSFER:
+                if(controle.cross) {
+                    deliveryClaw.setPosition(0.4);
+                    deliveryGyro.setPosition(0.35);
+                    deliveryGyroRight.setPosition(0);
+                    deliveryGyroLeft.setPosition(0);
                 }
-                break;
-            case CLAW_CLOSED:
-            {
-                if (controle.cross)
-                {
-                    claw.setPower(0.26);
-                }
+                    break;
 
-            }
+                    case MIDDLE:
+                        if (controle.cross) {
+                            deliveryGyro.setPosition(0.3);
+                            deliveryGyroRight.setPosition(0);
+                            deliveryGyroLeft.setPosition(0);
+                        }
+                        break;
+
+            case SPECIMEN:
+                if (controle.cross) {
+                    deliveryClaw.setPosition(0.4);
+                    deliveryGyro.setPosition(0.25);
+                    deliveryGyroRight.setPosition(0);
+                    deliveryGyroLeft.setPosition(0);
+                }
+                        break;
+                }
         }
     }
-}
