@@ -9,9 +9,18 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.util.Constants;
+
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
+import android.provider.SyncStateContract;
+
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp com Maquinas de Estado", group = "Iterative OpMode")
 public class TeleOpcomMaquinasdeEstado extends OpMode {
 
+    private Follower follower;
     private DcMotor leftElevatorDrive = null;
     private DcMotor rightElevatorDrive = null;
     private DcMotor intakeSliderDrive = null;
@@ -22,6 +31,8 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
     private Servo deliveryGyro = null;
     private Servo intakeLeftGyro = null;
     private Servo intakeRightGyro = null;
+    private final Pose startPose = new Pose(0,0,0);
+
     Gamepad controle;
 
     //Trava a posição do braço + garra dependendo da ação desejada;
@@ -36,11 +47,22 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
         TRANSFER
     }
 
+    private enum BasketStatus {
+        LOW,
+        HIGH
+    }
+
     SetDeliveryStatus setDeliveryStatus = SetDeliveryStatus.TRANSFER.MIDDLE.SPECIMEN;
     IntakeStatus intakeStatus = IntakeStatus.TRANSFER.INTAKING;
+    BasketStatus basketStatus = BasketStatus.LOW.HIGH;
 
     @Override
     public void init() {
+
+        Constants.setConstants(FConstants.class,LConstants.class);
+        follower = new Follower(hardwareMap);
+        follower.setStartingPose(startPose);
+
         //Motores
         rightElevatorDrive = hardwareMap.get(DcMotor.class, "rightElevatorDrive"); // Nome na Driver Station Deverá ser o mesmo que o nome entre ""
         leftElevatorDrive = hardwareMap.get(DcMotor.class, "leftElevatorDrive");
@@ -135,30 +157,58 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                         setDeliveryStatus = SetDeliveryStatus.TRANSFER;
                         break;
                     }
+            }
+        }
 
+        if (controle.dpad_up) {
+            switch (intakeStatus) {
+                case INTAKING: {
+                    intakeRightGyro.setPosition(-0.2);
+                    intakeLeftGyro.setPosition(0.2);
                     if (controle.dpad_up) {
-                        switch (intakeStatus) {
-                            case INTAKING: {
-                                intakeRightGyro.setPosition(-0.2);
-                                intakeLeftGyro.setPosition(0.2);
-                                if (controle.dpad_up) {
-                                    intakeStatus = IntakeStatus.TRANSFER;
-                                }
-                            }
-                            break;
+                        intakeStatus = IntakeStatus.TRANSFER;
+                    }
+                }
+                break;
 
-                            case TRANSFER:
-                                if (controle.dpad_up) {
-                                    intakeRightGyro.setPosition(-0.2);
-                                    intakeLeftGyro.setPosition(0.2);
-                                    if (controle.dpad_up)
-                                    {
-                                        intakeStatus = IntakeStatus.INTAKING;
-                                    }
-                                }
-                                break;
+                case TRANSFER:
+                    if (controle.dpad_up) {
+                        intakeRightGyro.setPosition(-0.2);
+                        intakeLeftGyro.setPosition(0.2);
+                        if (controle.dpad_up)
+                        {
+                            intakeStatus = IntakeStatus.INTAKING;
                         }
                     }
+                    break;
+            }
+        }
+
+        if (controle.right_bumper)
+        {
+            switch (basketStatus)
+            {
+                case LOW:
+                    rightElevatorDrive.setTargetPosition(450);
+                    leftElevatorDrive.setTargetPosition(450);
+                    rightElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    if (controle.right_bumper)
+                    {
+                        basketStatus = BasketStatus.HIGH;
+                    }
+                    break;
+
+                case HIGH:
+                    rightElevatorDrive.setTargetPosition(1900);
+                    leftElevatorDrive.setTargetPosition(1900);
+                    rightElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    if (controle.right_bumper)
+                    {
+                        basketStatus = BasketStatus.LOW;
+                    }
+                    break;
             }
         }
     }
