@@ -102,11 +102,9 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     deliveryGyro.setPosition(0.35);
                     deliveryGyroRight.setPosition(0);
                     deliveryGyroLeft.setPosition(0);
-                    if (controle.cross)
-                    {
-                        setDeliveryStatus = SetDeliveryStatus.MIDDLE;
-                        break;
-                    }
+
+                    setDeliveryStatus = SetDeliveryStatus.MIDDLE;
+
                 }
                 break;
 
@@ -115,11 +113,8 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                         deliveryGyro.setPosition(0.3);
                         deliveryGyroRight.setPosition(0);
                         deliveryGyroLeft.setPosition(0);
-                        if (controle.cross)
-                        {
-                            setDeliveryStatus = SetDeliveryStatus.SPECIMEN;
-                            break;
-                        }
+
+                        setDeliveryStatus = SetDeliveryStatus.SPECIMEN;
                     }
                     break;
 
@@ -131,19 +126,15 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                         deliveryGyroLeft.setPosition(0);
                     }
 
-                    if (controle.cross) {
-                        setDeliveryStatus = SetDeliveryStatus.TRANSFER;
-                        break;
-                    }
+                    setDeliveryStatus = SetDeliveryStatus.TRANSFER;
 
                     if (controle.dpad_up) {
                         switch (intakeStatus) {
                             case INTAKING: {
                                 intakeRightGyro.setPosition(-0.2);
                                 intakeLeftGyro.setPosition(0.2);
-                                if (controle.dpad_up) {
-                                    intakeStatus = IntakeStatus.TRANSFER;
-                                }
+
+                                intakeStatus = IntakeStatus.TRANSFER;
                             }
                             break;
 
@@ -151,10 +142,8 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                                 if (controle.dpad_up) {
                                     intakeRightGyro.setPosition(-0.2);
                                     intakeLeftGyro.setPosition(0.2);
-                                    if (controle.dpad_up)
-                                    {
-                                        intakeStatus = IntakeStatus.INTAKING;
-                                    }
+
+                                    intakeStatus = IntakeStatus.INTAKING;
                                 }
                                 break;
                         }
