@@ -1,5 +1,7 @@
 package pedroPathing;
 
+import android.hardware.Sensor;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.util.Constants;
@@ -8,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -31,6 +34,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
     public Servo deliveryGyro = null;
     public Servo intakeLeftGyro = null;
     public Servo intakeRightGyro = null;
+    public RevColorSensorV3 colorSensor = null;
     Controller controle;
 
     //Trava a posição do braço + garra dependendo da ação desejada;
@@ -113,6 +117,10 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
 
         intakeRightGyro.setPosition(0);
         intakeLeftGyro.setPosition(0);
+
+        //Sensor de Cor
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+        colorSensor.enableLed(true);
 
         telemetry.addData(">", "Hardware Initialized");
         telemetry.update();

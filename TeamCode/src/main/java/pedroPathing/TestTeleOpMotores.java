@@ -16,7 +16,7 @@ public class TestTeleOpMotores extends LinearOpMode {
         teleOpcomMaquinasdeEstado.init();
         teleOpcomMaquinasdeEstado.start();
 
-        DcMotor dcMotor = hardwareMap.get(DcMotor.class, "leftElevatorDrive");
+//        DcMotor dcMotor = hardwareMap.get(DcMotor.class, "leftElevatorDrive");
 
 
         telemetry.addData("Status", "PLAY");
@@ -24,7 +24,7 @@ public class TestTeleOpMotores extends LinearOpMode {
 
         waitForStart();
 
-        double postion = 0;
+        double position = 0;
         boolean lastCircle = false;
         boolean lastSquare = false;
         boolean lastTriangle = false;
@@ -34,9 +34,9 @@ public class TestTeleOpMotores extends LinearOpMode {
             //Teste dos elevadores e sliders
             if (controle.circle.wasJustReleased() && !lastCircle)
             {
-                postion -= 0.5;
+                position -= 0.5;
                 lastCircle = true;
-                teleOpcomMaquinasdeEstado.leftElevatorDrive.setPower(postion);
+                teleOpcomMaquinasdeEstado.leftElevatorDrive.setPower(position);
             }
             if (!controle.circle.wasJustReleased())
             {
@@ -45,9 +45,9 @@ public class TestTeleOpMotores extends LinearOpMode {
 
             if (controle.square.wasJustReleased() && !lastSquare)
             {
-                postion += 0.5;
+                position += 0.5;
                 lastSquare = true;
-                teleOpcomMaquinasdeEstado.rightElevatorDrive.setPower(postion);
+                teleOpcomMaquinasdeEstado.rightElevatorDrive.setPower(position);
             }
             if (!controle.square.wasJustReleased())
             {
@@ -56,9 +56,9 @@ public class TestTeleOpMotores extends LinearOpMode {
 
             if (controle.triangle.wasJustReleased() && !lastTriangle)
             {
-                postion -= 0.5;
+                position -= 0.5;
                 lastTriangle = true;
-                teleOpcomMaquinasdeEstado.intakeSliderDrive.setPower(postion);
+                teleOpcomMaquinasdeEstado.intakeSliderDrive.setPower(position);
             }
             if (!controle.triangle.wasJustPressed())
             {
@@ -67,9 +67,9 @@ public class TestTeleOpMotores extends LinearOpMode {
 
             if  (controle.cross.wasJustReleased() && !lastCross)
             {
-                postion += 0.5;
+                position += 0.5;
                 lastCross = true;
-                teleOpcomMaquinasdeEstado.intakeDrive.setPower(postion);
+                teleOpcomMaquinasdeEstado.intakeDrive.setPower(position);
             }
             if (!controle.cross.wasJustPressed())
             {
