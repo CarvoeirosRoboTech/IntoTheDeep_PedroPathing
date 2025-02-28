@@ -140,6 +140,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     deliveryGyroRight.setPosition(0);
                     deliveryGyroLeft.setPosition(0);
 
+
                     setDeliveryStatus = SetDeliveryStatus.MIDDLE;
 
                 }
@@ -201,23 +202,29 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                         deliveryGyroRight.setPosition(0.3);
                         deliveryGyroLeft.setPosition(0.3);
 
-                        basket = Basket.LOW;
+                        basket = Basket.HIGH;
                     }
                     break;
+                    }
+            }
 
+            if (controle.rightBumper.wasJustPressed())
+            {
+                switch (basket)
+                {
                     case LOW:
                     {
                         leftElevatorDrive.setTargetPosition(450);
                         rightElevatorDrive.setTargetPosition(450);
                         leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         rightElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        intakeLeftGyro.setPosition(0.5);
-                        intakeRightGyro.setPosition(0.5);
+                        deliveryGyroRight.setPosition(0);
+                        deliveryGyroLeft.setPosition(0);
 
-                        basket = Basket.HIGH;
+                        basket = Basket.LOW;
                     }
                     break;
-                    }
+                }
             }
         }
 
@@ -236,5 +243,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
     @Override
     public void start() {
         follower.startTeleopDrive();
+        controle = new Controller(gamepad1);
+        telemetry.addData("Status", "START");
     }
 }
