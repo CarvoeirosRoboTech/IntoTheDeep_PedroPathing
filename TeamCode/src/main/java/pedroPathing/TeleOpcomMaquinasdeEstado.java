@@ -75,13 +75,13 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
         rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         leftElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -132,9 +132,12 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
 
     @Override
     public void loop() {
-        if (controle.cross.wasJustPressed()) {
-            switch (setDeliveryStatus) {
-                case TRANSFER: {
+        if (controle.cross.wasJustPressed())
+        {
+            switch (setDeliveryStatus)
+            {
+                case TRANSFER:
+                {
                     deliveryClaw.setPosition(0.4);
                     deliveryGyro.setPosition(0.35);
                     deliveryGyroRight.setPosition(0);
@@ -147,7 +150,8 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                 break;
 
                 case MIDDLE:
-                    if (controle.cross.wasJustPressed()) {
+                    if (controle.cross.wasJustPressed())
+                    {
                         deliveryGyro.setPosition(0.3);
                         deliveryGyroRight.setPosition(0);
                         deliveryGyroLeft.setPosition(0);
@@ -157,7 +161,8 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     break;
 
                 case SPECIMEN:
-                    if (controle.cross.wasJustPressed()) {
+                    if (controle.cross.wasJustPressed())
+                    {
                         deliveryClaw.setPosition(0.4);
                         deliveryGyro.setPosition(0.25);
                         deliveryGyroRight.setPosition(0);
@@ -167,9 +172,12 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     setDeliveryStatus = SetDeliveryStatus.TRANSFER;
             }
 
-            if (controle.dpadUp.wasJustPressed()) {
-                switch (intakeStatus) {
-                    case INTAKING: {
+            if (controle.dpadUp.wasJustPressed())
+            {
+                switch (intakeStatus)
+                {
+                    case INTAKING:
+                    {
                         intakeRightGyro.setPosition(-0.2);
                         intakeLeftGyro.setPosition(0.2);
 
@@ -178,7 +186,8 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     break;
 
                     case TRANSFER:
-                        if (controle.dpadUp.wasJustPressed()) {
+                        if (controle.dpadUp.wasJustPressed())
+                        {
                             intakeRightGyro.setPosition(-0.2);
                             intakeLeftGyro.setPosition(0.2);
 
@@ -188,8 +197,10 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                 }
             }
 
-            if (controle.leftBumper.wasJustPressed()) {
-                switch (basket) {
+            if (controle.leftBumper.wasJustPressed())
+            {
+                switch (basket)
+                {
                     case HIGH:
                     {
                         leftElevatorDrive.setTargetPosition(1900);
@@ -228,7 +239,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
             }
         }
 
-        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         follower.update();
 
         /* Telemetry Outputs of our Follower */
@@ -241,7 +252,8 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
     }
 
     @Override
-    public void start() {
+    public void start()
+    {
         follower.startTeleopDrive();
         controle = new Controller(gamepad1);
         telemetry.addData("Status", "START");
