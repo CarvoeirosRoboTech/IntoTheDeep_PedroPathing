@@ -3,37 +3,35 @@ package pedroPathing;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.util.Constants;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
+import controller.Controller;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp com Maquinas de Estado", group = "Iterative OpMode")
+@TeleOp(name = "TeleOp com Maquinas de Estado", group = "Iterative OpMode")
 public class TeleOpcomMaquinasdeEstado extends OpMode {
 
-    private DcMotor leftElevatorDrive = null;
-    private DcMotor rightElevatorDrive = null;
-    private DcMotor intakeSliderDrive = null;
-    private DcMotor intakeDrive = null;
+    public DcMotor leftElevatorDrive = null;
+    public DcMotor rightElevatorDrive = null;
+    public DcMotor intakeSliderDrive = null;
+    public DcMotor intakeDrive = null;
     private DcMotor leftRear = null;
     private DcMotor leftFront = null;
     private DcMotor rightRear = null;
     private DcMotor rightFront = null;
     private Follower follower;
-    private Servo deliveryClaw = null;
-    private Servo deliveryGyroLeft = null;
-    private Servo deliveryGyroRight = null;
-    private Servo deliveryGyro = null;
-    private Servo intakeLeftGyro = null;
-    private Servo intakeRightGyro = null;
-    Gamepad controle;
+    public Servo deliveryClaw = null;
+    public Servo deliveryGyroLeft = null;
+    public Servo deliveryGyroRight = null;
+    public Servo deliveryGyro = null;
+    public Servo intakeLeftGyro = null;
+    public Servo intakeRightGyro = null;
+    Controller controle;
 
     //Trava a posição do braço + garra dependendo da ação desejada;
     private enum SetDeliveryStatus {
@@ -69,9 +67,25 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
         leftElevatorDrive = hardwareMap.get(DcMotor.class, "leftElevatorDrive");
         intakeSliderDrive = hardwareMap.get(DcMotor.class, "intakeSliderDrive");
         intakeDrive = hardwareMap.get(DcMotor.class, "intakeDrive");
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        leftRear = hardwareMap.get(DcMotor.class, "leftRear");
+        rightFront = hardwareMap.get(DcMotor.class,"rightFront");
+        rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
         rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         leftElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -118,7 +132,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
 
     @Override
     public void loop() {
-        if (controle.cross) {
+        if (controle.cross.wasJustPressed()) {
             switch (setDeliveryStatus) {
                 case TRANSFER: {
                     deliveryClaw.setPosition(0.4);
@@ -132,7 +146,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                 break;
 
                 case MIDDLE:
-                    if (controle.cross) {
+                    if (controle.cross.wasJustPressed()) {
                         deliveryGyro.setPosition(0.3);
                         deliveryGyroRight.setPosition(0);
                         deliveryGyroLeft.setPosition(0);
@@ -142,7 +156,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     break;
 
                 case SPECIMEN:
-                    if (controle.cross) {
+                    if (controle.cross.wasJustPressed()) {
                         deliveryClaw.setPosition(0.4);
                         deliveryGyro.setPosition(0.25);
                         deliveryGyroRight.setPosition(0);
@@ -152,7 +166,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     setDeliveryStatus = SetDeliveryStatus.TRANSFER;
             }
 
-            if (controle.dpad_up) {
+            if (controle.dpadUp.wasJustPressed()) {
                 switch (intakeStatus) {
                     case INTAKING: {
                         intakeRightGyro.setPosition(-0.2);
@@ -163,7 +177,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     break;
 
                     case TRANSFER:
-                        if (controle.dpad_up) {
+                        if (controle.dpadUp.wasJustPressed()) {
                             intakeRightGyro.setPosition(-0.2);
                             intakeLeftGyro.setPosition(0.2);
 
@@ -173,7 +187,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                 }
             }
 
-            if (controle.right_bumper) {
+            if (controle.leftBumper.wasJustPressed()) {
                 switch (basket) {
                     case HIGH:
                     {
