@@ -1,15 +1,18 @@
 package hardware;
 
-import com.pedropathing.follower.Follower;
-import com.pedropathing.localization.Pose;
-import com.pedropathing.util.Constants;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
+import static hardware.Globals.*;
 
-import java.util.function.LongConsumer;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.localization.PoseUpdater;
+import com.pedropathing.util.Constants;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -17,64 +20,145 @@ import pedroPathing.constants.LConstants;
 public class RobotHardware {
 
     /* Declare OpMode members. */
-    private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
-
-    // Define Motor and Servo objects  (Make them private so they can't be accessed externally)
-//    private DcMotor leftDrive   = null;
-//    private DcMotor rightDrive  = null;
-//    private DcMotor armMotor = null;
-//    private Servo   leftHand = null;
-//    private Servo   rightHand = null;
-//
-//    // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
-//    public static final double MID_SERVO       =  0.5 ;
-//    public static final double HAND_SPEED      =  0.02 ;  // sets rate to move servo
-//    public static final double ARM_UP_POWER    =  0.45 ;
-//    public static final double ARM_DOWN_POWER  = -0.45 ;
-
-    // Define a constructor that allows the OpMode to pass a reference to itself.
-    public RobotHardware (LinearOpMode opmode) {
+    private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
+    public RobotHardware (OpMode opmode) {
         myOpMode = opmode;
     }
 
-    /**
-     * Initialize all the robot's hardware.
-     * This method must be called ONCE when the OpMode is initialized.
-     * <p>
-     * All of the hardware devices are accessed via the hardware map, and initialized.
-     */
+    //Drive Motors
+    private DcMotor leftRear;
+    private DcMotor leftFront;
+    private DcMotor rightRear;
+    private DcMotor rightFront;
+
+    // Deposit Motors
+    public DcMotor leftElevatorDrive;
+    public DcMotor rightElevatorDrive;
+
+    // Intake Motors
+    public DcMotor intakeSliderDrive;
+    public DcMotor intakeDrive;
+
+    //Delivery Servos
+    public Servo deliveryClaw;
+    public Servo deliveryGyroLeft;
+    public Servo deliveryGyroRight;
+    public Servo deliveryGyro;
+
+    //Intake Servos
+    public Servo intakeLeftGyro;
+    public Servo intakeRightGyro;
+
+    //Hang Servos
+    public Servo hangRight;
+    public Servo hangLeft;
+
+    //3rd Devices
+    public RevColorSensorV3 colorSensor;
+//    public Limelight3A limelight;
+
+    //Follower
     private Follower follower;
+    public PoseUpdater poseUpdater;
     private final Pose startPose = new Pose(0,0,0);
 
     public void init()    {
-//        // Define and Initialize Motors (note: need to use reference to actual OpMode).
-//        leftDrive  = myOpMode.hardwareMap.get(DcMotor.class, "left_drive");
-//        rightDrive = myOpMode.hardwareMap.get(DcMotor.class, "right_drive");
-//        armMotor   = myOpMode.hardwareMap.get(DcMotor.class, "arm");
-//
-//        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-//        // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-//        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-//        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-//        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-//
-//        // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
-//        // leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        // rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//
-//        // Define and initialize ALL installed servos.
-//        leftHand = myOpMode.hardwareMap.get(Servo.class, "left_hand");
-//        rightHand = myOpMode.hardwareMap.get(Servo.class, "right_hand");
-//        leftHand.setPosition(MID_SERVO);
-//        rightHand.setPosition(MID_SERVO);
+        rightElevatorDrive = myOpMode.hardwareMap.get(DcMotor.class, "elevadorDireito"); //EH 0
+        leftElevatorDrive = myOpMode.hardwareMap.get(DcMotor.class, "elevadorEsquerdo"); //EH 1
+        intakeSliderDrive = myOpMode.hardwareMap.get(DcMotor.class, "sliderDrive");      //EH 3
+        intakeDrive = myOpMode.hardwareMap.get(DcMotor.class, "intakeDrive");            //EH 2
+        leftFront = myOpMode.hardwareMap.get(DcMotor.class, "leftFront");                //CH 3
+        leftRear = myOpMode.hardwareMap.get(DcMotor.class, "leftRear");                  //CH 2
+        rightFront = myOpMode.hardwareMap.get(DcMotor.class, "rightFront");              //CH 1
+        rightRear = myOpMode.hardwareMap.get(DcMotor.class, "rightRear");                //CH 0
 
+
+        rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeSliderDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        leftElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //Servos
+        deliveryClaw = myOpMode.hardwareMap.get(Servo.class, "deliveryGarra");             //CH Servo 3
+        deliveryGyro = myOpMode.hardwareMap.get(Servo.class, "deliveryGiro");              //CH Servo 2
+        deliveryGyroLeft = myOpMode.hardwareMap.get(Servo.class, "deliveryOmbroEsquerdo"); //CH Servo 0
+        deliveryGyroRight = myOpMode.hardwareMap.get(Servo.class, "deliveryOmbroDireito"); //CH Servo 1
+
+        intakeLeftGyro = myOpMode.hardwareMap.get(Servo.class, "intakeEsquerdo");          //EH Servo 1
+        intakeRightGyro = myOpMode.hardwareMap.get(Servo.class, "intakeDireito");          //EH Servo 0
+
+        hangRight = myOpMode.hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
+        hangLeft = myOpMode.hardwareMap.get(Servo.class, "hangEsquerdo");                  //CH Servo 2
+
+        deliveryClaw.setPosition(MID_SERVO);
+        deliveryGyro.setPosition(MID_SERVO);
+        deliveryGyroRight.setPosition(MID_SERVO);
+        deliveryGyroLeft.setPosition(MID_SERVO);
+//
+//        intakeRightGyro.setPosition(MID_SERVO);
+//        intakeLeftGyro.setPosition(MID_SERVO);
+
+        //Sensor de Cor
+        colorSensor = myOpMode.hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+        colorSensor.enableLed(true);
+
+//        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+
+
+        //Drive Methods, choose between drive methods based on OpMode;
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(myOpMode.hardwareMap);
-        follower.setStartingPose(startPose);
+
+        FollowerConstants.useBrakeModeInTeleOp = true;
+        poseUpdater = new PoseUpdater(myOpMode.hardwareMap);
+
+        if (opModeType.equals(opModeType.TELEOP)) {
+            follower.startTeleopDrive();
+
+            follower.setStartingPose(autoEndPose);
+
+            myOpMode.telemetry.addData(">", "Drive Initialized TELEOP");
+            myOpMode.telemetry.update();
+        } else {
+            follower.setStartingPose(new Pose(0,0,0));
+            myOpMode.telemetry.addData(">", "Drive Initialized AUTO");
+            myOpMode.telemetry.update();
+        }
 
         myOpMode.telemetry.addData(">", "Hardware Initialized");
         myOpMode.telemetry.update();
 
-        follower.startTeleopDrive();
     }
+
+    public enum RobotState {
+        MIDDLE_RESTING,
+        TRANSFERRED,
+        SCORING,
+        INTAKING,
+        EJECTING,
+        SPECIMEN_INTAKING,
+        SPECIMEN_SCORING
+    }
+
+    public static Robot.RobotState robotState;
 }

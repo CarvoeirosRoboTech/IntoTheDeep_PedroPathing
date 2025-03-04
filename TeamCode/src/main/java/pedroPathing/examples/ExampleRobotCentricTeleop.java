@@ -1,16 +1,10 @@
 package pedroPathing.examples;
 
-import static Globals.GlobalPositions.FRONT_HIGH_SPECIMEN_HEIGHT;
-import static Globals.GlobalPositions.HIGH_BUCKET_HEIGHT;
-import static Globals.GlobalPositions.LOW_BUCKET_HEIGHT;
-import static Globals.GlobalPositions.MAX_EXTENDO_EXTENSION;
-import static Globals.GlobalPositions.MID_SERVO;
-import static Globals.GlobalPositions.MIN_DISTANCE_THRESHOLD;
-import static Globals.GlobalPositions.MIN_EXTENDO_EXTENSION;
-import static Globals.GlobalPositions.RATIO_FACTOR;
-import static Globals.GlobalPositions.SLIDER_POWER;
-
-import android.provider.SyncStateContract;
+import static hardware.Globals.FRONT_HIGH_SPECIMEN_HEIGHT;
+import static hardware.Globals.HIGH_BUCKET_HEIGHT;
+import static hardware.Globals.LOW_BUCKET_HEIGHT;
+import static hardware.Globals.MID_SERVO;
+import static hardware.Globals.RATIO_FACTOR;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;

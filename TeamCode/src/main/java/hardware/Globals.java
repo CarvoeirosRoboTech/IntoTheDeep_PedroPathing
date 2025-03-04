@@ -1,10 +1,10 @@
-package Globals;
+package hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.localization.Pose;
 
 @Config
-public class GlobalPositions {
+public class Globals {
     public enum OpModeType {
         AUTO,
         TELEOP

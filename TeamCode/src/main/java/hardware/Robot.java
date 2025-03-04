@@ -1,69 +1,78 @@
 package hardware;
 
-import static Globals.GlobalPositions.INTAKE_HOLD_SPEED;
-import static Globals.GlobalPositions.MID_SERVO;
-import static Globals.GlobalPositions.autoEndPose;
-import static Globals.GlobalPositions.opModeType;
+import static hardware.Globals.*;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
-import com.pedropathing.localization.Pose;
 import com.pedropathing.localization.PoseUpdater;
 import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
-import java.util.List;
-
-import Globals.GlobalPositions.*;
-import controller.Controller;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 public class Robot {
-    public DcMotor leftElevatorDrive = null;
-    public DcMotor rightElevatorDrive = null;
-    public DcMotor intakeSliderDrive = null;
-    public DcMotor intakeDrive = null;
-    private DcMotor leftRear = null;
-    private DcMotor leftFront = null;
-    private DcMotor rightRear = null;
-    private DcMotor rightFront = null;
+    private OpMode myOpMode = null;
+
+    //Drive Motors
+    private DcMotor leftRear;
+    private DcMotor leftFront;
+    private DcMotor rightRear;
+    private DcMotor rightFront;
+
+    // Deposit Motors
+    public DcMotor leftElevatorDrive;
+    public DcMotor rightElevatorDrive;
+
+    // Intake Motors
+    public DcMotor intakeSliderDrive;
+    public DcMotor intakeDrive;
+
+    //Delivery Servos
+    public Servo deliveryClaw;
+    public Servo deliveryGyroLeft;
+    public Servo deliveryGyroRight;
+    public Servo deliveryGyro;
+
+    //Intake Servos
+    public Servo intakeLeftGyro;
+    public Servo intakeRightGyro;
+
+    //Hang Servos
+    public Servo hangRight;
+    public Servo hangLeft;
+
+    //3rd Devices
+    public RevColorSensorV3 colorSensor;
+    public Limelight3A limelight;
+
+    //Follower
     private Follower follower;
     public PoseUpdater poseUpdater;
-    public Servo deliveryClaw = null;
-    public Servo deliveryGyroLeft = null;
-    public Servo deliveryGyroRight = null;
-    public Servo deliveryGyro = null;
-    public Servo intakeLeftGyro = null;
-    public Servo intakeRightGyro = null;
-
-    public Servo handRight = null;
-    public Servo handLeft = null;
-    public RevColorSensorV3 colorSensor = null;
-    public Limelight3A limelight;
 //    Controller controle;
 
 //    public List<LynxModule> allHubs;
 //
 //    public LynxModule ControlHub;
 //
-    private static Robot instance = new Robot();
-    public boolean enabled;
-//
-    public static Robot getInstance() {
-        if (instance == null) {
-            instance = new Robot();
-        }
-        instance.enabled = true;
-        return instance;
-    }
+//    private static Robot instance = new Robot(getInstance().myOpMode);
+//    public boolean enabled;
+////
+//    public static Robot getInstance() {
+//        if (instance == null) {
+//            instance = new Robot(getInstance().myOpMode);
+//        }
+//        instance.enabled = true;
+//        return instance;
+//    }
+
+    public Robot (OpMode opmode) {myOpMode = opmode;}
 
     public void init(HardwareMap hardwareMap) {
 
@@ -112,8 +121,8 @@ public class Robot {
         intakeLeftGyro = hardwareMap.get(Servo.class, "intakeEsquerdo");          //EH Servo 1
         intakeRightGyro = hardwareMap.get(Servo.class, "intakeDireito");          //EH Servo 0
 
-        handRight = hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
-        handLeft = hardwareMap.get(Servo.class, "hangEsquerdo");                  //CH Servo 2
+        hangRight = hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
+        hangLeft = hardwareMap.get(Servo.class, "hangEsquerdo");                  //CH Servo 2
 
         deliveryClaw.setPosition(MID_SERVO);
         deliveryGyro.setPosition(MID_SERVO);

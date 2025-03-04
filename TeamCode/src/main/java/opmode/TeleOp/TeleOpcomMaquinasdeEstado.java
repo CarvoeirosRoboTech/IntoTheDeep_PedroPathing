@@ -1,6 +1,6 @@
 package opmode.TeleOp;
 
-import static Globals.GlobalPositions.MID_SERVO;
+import static hardware.Globals.MID_SERVO;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
