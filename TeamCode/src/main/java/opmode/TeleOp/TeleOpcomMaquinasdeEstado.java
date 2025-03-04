@@ -1,6 +1,6 @@
-package pedroPathing;
+package opmode.TeleOp;
 
-import android.hardware.Sensor;
+import static Globals.GlobalPositions.MID_SERVO;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -34,8 +34,15 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
     public Servo deliveryGyro = null;
     public Servo intakeLeftGyro = null;
     public Servo intakeRightGyro = null;
+
+    public Servo handRight = null;
+    public Servo handLeft = null;
     public RevColorSensorV3 colorSensor = null;
     Controller controle;
+
+    public Controller getControle() {
+        return controle;
+    }
 
     //Trava a posição do braço + garra dependendo da ação desejada;
     private enum SetDeliveryStatus {
@@ -54,30 +61,36 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
         LOW
     }
 
+    private enum Chamber {
+        HIGH,
+        LOW
+    }
+
     SetDeliveryStatus setDeliveryStatus = SetDeliveryStatus.TRANSFER.MIDDLE.SPECIMEN;
     IntakeStatus intakeStatus = IntakeStatus.TRANSFER.INTAKING;
     Basket basket = Basket.HIGH.LOW;
-    private final Pose startPose = new Pose(0,0,0);
+    private final Pose startPose = new Pose(0, 0, 0);
 
 
     @Override
     public void init() {
-            Constants.setConstants(FConstants.class, LConstants.class);
-            follower = new Follower(hardwareMap);
-            follower.setStartingPose(startPose);
+        Constants.setConstants(FConstants.class, LConstants.class);
+        follower = new Follower(hardwareMap);
+        follower.setStartingPose(startPose);
 
-            //Motores
-        rightElevatorDrive = hardwareMap.get(DcMotor.class, "rightElevatorDrive"); // Nome na Driver Station Deverá ser o mesmo que o nome entre ""
-        leftElevatorDrive = hardwareMap.get(DcMotor.class, "leftElevatorDrive");
-        intakeSliderDrive = hardwareMap.get(DcMotor.class, "intakeSliderDrive");
-        intakeDrive = hardwareMap.get(DcMotor.class, "intakeDrive");
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotor.class, "leftRear");
-        rightFront = hardwareMap.get(DcMotor.class,"rightFront");
-        rightRear = hardwareMap.get(DcMotor.class, "rightRear");
+        //Motores
+        rightElevatorDrive = hardwareMap.get(DcMotor.class, "elevadorDireito"); //EH 0
+        leftElevatorDrive = hardwareMap.get(DcMotor.class, "elevadorEsquerdo"); //EH 1
+        intakeSliderDrive = hardwareMap.get(DcMotor.class, "sliderDrive");      //EH 3
+        intakeDrive = hardwareMap.get(DcMotor.class, "intakeDrive");            //EH 2
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront");                //CH 3
+        leftRear = hardwareMap.get(DcMotor.class, "leftRear");                  //CH 2
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");              //CH 1
+        rightRear = hardwareMap.get(DcMotor.class, "rightRear");                //CH 0
+
 
         rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -102,21 +115,24 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
         rightElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Servos
-        deliveryClaw = hardwareMap.get(Servo.class, "deliveryClaw");
-        deliveryGyro = hardwareMap.get(Servo.class, "deliveryGyro");
-        deliveryGyroLeft = hardwareMap.get(Servo.class, "deliveryGyroLeft");
-        deliveryGyroRight = hardwareMap.get(Servo.class, "deliveryGyroRight");
+        deliveryClaw = hardwareMap.get(Servo.class, "deliveryGarra");             //CH Servo 3
+        deliveryGyro = hardwareMap.get(Servo.class, "deliveryGiro");              //CH Servo 2
+        deliveryGyroLeft = hardwareMap.get(Servo.class, "deliveryOmbroEsquerdo"); //CH Servo 0
+        deliveryGyroRight = hardwareMap.get(Servo.class, "deliveryOmbroDireito"); //CH Servo 1
 
-        intakeLeftGyro = hardwareMap.get(Servo.class, "intakeGyroLeft");
-        intakeRightGyro = hardwareMap.get(Servo.class, "intakeGyroRight");
+        intakeLeftGyro = hardwareMap.get(Servo.class, "intakeEsquerdo");          //EH Servo 1
+        intakeRightGyro = hardwareMap.get(Servo.class, "intakeDireito");          //EH Servo 0
 
-        deliveryClaw.setPosition(0);
-        deliveryGyro.setPosition(0);
-        deliveryGyroRight.setPosition(0);
-        deliveryGyroLeft.setPosition(0);
+        handRight = hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
+        handLeft = hardwareMap.get(Servo.class, "hangEsquerdo");                  //CH Servo 2
 
-        intakeRightGyro.setPosition(0);
-        intakeLeftGyro.setPosition(0);
+        deliveryClaw.setPosition(MID_SERVO);
+//        deliveryGyro.setPosition(MID_SERVO);
+//        deliveryGyroRight.setPosition(MID_SERVO);
+//        deliveryGyroLeft.setPosition(MID_SERVO);
+//
+//        intakeRightGyro.setPosition(MID_SERVO);
+//        intakeLeftGyro.setPosition(MID_SERVO);
 
         //Sensor de Cor
         colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
@@ -140,12 +156,9 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
 
     @Override
     public void loop() {
-        if (controle.cross.wasJustPressed())
-        {
-            switch (setDeliveryStatus)
-            {
-                case TRANSFER:
-                {
+        if (controle.cross.wasJustPressed()) {
+            switch (setDeliveryStatus) {
+                case TRANSFER: {
                     deliveryClaw.setPosition(0.4);
                     deliveryGyro.setPosition(0.35);
                     deliveryGyroRight.setPosition(0);
@@ -158,8 +171,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                 break;
 
                 case MIDDLE:
-                    if (controle.cross.wasJustPressed())
-                    {
+                    if (controle.cross.wasJustPressed()) {
                         deliveryGyro.setPosition(0.3);
                         deliveryGyroRight.setPosition(0);
                         deliveryGyroLeft.setPosition(0);
@@ -169,8 +181,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     break;
 
                 case SPECIMEN:
-                    if (controle.cross.wasJustPressed())
-                    {
+                    if (controle.cross.wasJustPressed()) {
                         deliveryClaw.setPosition(0.4);
                         deliveryGyro.setPosition(0.25);
                         deliveryGyroRight.setPosition(0);
@@ -180,12 +191,9 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     setDeliveryStatus = SetDeliveryStatus.TRANSFER;
             }
 
-            if (controle.dpadUp.wasJustPressed())
-            {
-                switch (intakeStatus)
-                {
-                    case INTAKING:
-                    {
+            if (controle.dpadUp.wasJustPressed()) {
+                switch (intakeStatus) {
+                    case INTAKING: {
                         intakeRightGyro.setPosition(-0.2);
                         intakeLeftGyro.setPosition(0.2);
 
@@ -194,8 +202,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                     break;
 
                     case TRANSFER:
-                        if (controle.dpadUp.wasJustPressed())
-                        {
+                        if (controle.dpadUp.wasJustPressed()) {
                             intakeRightGyro.setPosition(-0.2);
                             intakeLeftGyro.setPosition(0.2);
 
@@ -205,12 +212,9 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
                 }
             }
 
-            if (controle.leftBumper.wasJustPressed())
-            {
-                switch (basket)
-                {
-                    case HIGH:
-                    {
+            if (controle.leftBumper.wasJustPressed()) {
+                switch (basket) {
+                    case HIGH: {
                         leftElevatorDrive.setTargetPosition(1900);
                         rightElevatorDrive.setTargetPosition(1900);
                         leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -223,16 +227,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
 
                         basket = Basket.HIGH;
                     }
-                    break;
-                    }
-            }
-
-            if (controle.rightBumper.wasJustPressed())
-            {
-                switch (basket)
-                {
-                    case LOW:
-                    {
+                    case LOW: {
                         leftElevatorDrive.setTargetPosition(450);
                         rightElevatorDrive.setTargetPosition(450);
                         leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -242,28 +237,60 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
 
                         basket = Basket.LOW;
                     }
-                    break;
+                }
+
+                if (controle.dpadUp.wasJustPressed()) {
+                    basket = Basket.HIGH;
+                }
+
+                if (controle.dpadDown.wasJustPressed()) {
+                    basket = Basket.LOW;
                 }
             }
+
+            follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+            follower.update();
+
+            /* Telemetry Outputs of our Follower */
+            telemetry.addData("X", follower.getPose().getX());
+            telemetry.addData("Y", follower.getPose().getY());
+            telemetry.addData("Heading in Degrees", Math.toDegrees(follower.getPose().getHeading()));
+
+            telemetry.addData("", "------------");
+            telemetry.addData("Current Basket", basket);
+
+            /* Update Telemetry to the Driver Hub */
+            telemetry.update();
         }
 
-        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-        follower.update();
+        if (controle.circle.wasJustPressed()) {
+            double pos = deliveryClaw.getPosition();
+            deliveryClaw.setPosition(pos - 0.05);
+            pos = deliveryClaw.getPosition();
 
-        /* Telemetry Outputs of our Follower */
-        telemetry.addData("X", follower.getPose().getX());
-        telemetry.addData("Y", follower.getPose().getY());
-        telemetry.addData("Heading in Degrees", Math.toDegrees(follower.getPose().getHeading()));
+            telemetry.addData("POS GARRA:", pos);
+            telemetry.update();
 
-        /* Update Telemetry to the Driver Hub */
-        telemetry.update();
+        }
+
+        if (controle.triangle.wasJustPressed()) {
+            double pos = deliveryClaw.getPosition();
+            deliveryClaw.setPosition(pos + 0.05);
+            pos = deliveryClaw.getPosition();
+
+            telemetry.addData("POS GARRA:", pos);
+            telemetry.update();
+
+        }
+
+        if (controle.square.wasJustPressed()) {
+            deliveryClaw.setPosition(MID_SERVO);
+        }
     }
-
-    @Override
-    public void start()
-    {
-        follower.startTeleopDrive();
-        controle = new Controller(gamepad1);
-        telemetry.addData("Status", "START");
+        @Override
+        public void start () {
+            follower.startTeleopDrive();
+            controle = new Controller(gamepad1);
+            telemetry.addData("Status", "START");
+        }
     }
-}
