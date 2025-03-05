@@ -22,6 +22,14 @@ public class Globals {
         RED_OBSERVATION
     }
 
+    public enum SCORING {
+        HIGH_BUCKET,
+        LOW_BUCKET,
+        HIGH_SPECIMEN
+    }
+
+    public static SCORING scoring;
+
     public static OpModeType opModeType;
     public static AllianceColor allianceColor;
     public static PoseLocationName poseLocationName;

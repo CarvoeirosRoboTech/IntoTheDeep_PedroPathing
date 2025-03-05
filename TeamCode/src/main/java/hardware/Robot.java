@@ -17,9 +17,9 @@ import com.qualcomm.robotcore.util.Range;
 import SubSystems.Delivery;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
+import pedroPathing.examples.ExampleRobotCentricTeleop;
 
 public class Robot {
-
     /* Declare OpMode members. */
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
     public Robot(OpMode opmode) {
@@ -66,6 +66,11 @@ public class Robot {
     private final Pose startPose = new Pose(0,0,0);
 
     public OpModeType opMODE = OpModeType.TELEOP;
+    public SCORING scoring = SCORING.HIGH_BUCKET;
+
+    public boolean isClawOpen = false;
+
+    double position = MID_SERVO;
 
 
     public void init()    {
@@ -81,7 +86,7 @@ public class Robot {
         rightRear = myOpMode.hardwareMap.get(DcMotor.class, "rightRear");                //CH 0
 
 
-        rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -114,6 +119,8 @@ public class Robot {
         deliveryGyro = myOpMode.hardwareMap.get(Servo.class, "deliveryGiro");              //CH Servo 2
         deliveryGyroLeft = myOpMode.hardwareMap.get(Servo.class, "deliveryOmbroEsquerdo"); //CH Servo 0
         deliveryGyroRight = myOpMode.hardwareMap.get(Servo.class, "deliveryOmbroDireito"); //CH Servo 1
+
+        deliveryGyroRight.setDirection(Servo.Direction.REVERSE);
 
         intakeLeftGyro = myOpMode.hardwareMap.get(Servo.class, "intakeEsquerdo");          //EH Servo 1
         intakeRightGyro = myOpMode.hardwareMap.get(Servo.class, "intakeDireito");          //EH Servo 0
@@ -182,6 +189,60 @@ public class Robot {
         myOpMode.telemetry.addData("STATUS", "Moved to position");
         myOpMode.telemetry.update();
     }
+
+    public void setDeliveryClaw(boolean clawOpen) {
+        if (clawOpen) {
+            deliveryClaw.setPosition(DEPOSIT_CLAW_OPEN_POS);
+            isClawOpen = false;
+        } else {
+            deliveryClaw.setPosition(DEPOSIT_CLAW_CLOSE_POS);
+            isClawOpen = true;
+        }
+    }
+
+    public void setClawOpen(boolean open) {
+        if (open) {
+            deliveryClaw.setPosition(DEPOSIT_CLAW_OPEN_POS);
+        } else {
+            deliveryClaw.setPosition(DEPOSIT_CLAW_CLOSE_POS);
+        }
+    }
+
+    public void setShoulderPos(double position) {
+//        double newPos = deliveryGyroLeft.getPosition() + position;
+//
+        deliveryGyroRight.setPosition(position);
+        deliveryGyroLeft.setPosition(position);
+//        deliveryGyroLeft.setPosition(newPos);
+//        deliveryGyroLeft.setPosition(newPos);
+
+        myOpMode.telemetry.addData("passed POS", position);
+//        myOpMode.telemetry.addData("calculated POS", newPos);
+        myOpMode.telemetry.addData("leftShoulderPOS", deliveryGyroLeft.getPosition());
+        myOpMode.telemetry.addData("rightShoulderPOS", deliveryGyroRight.getPosition());
+        myOpMode.telemetry.update();
+    }
+
+    public void plusShoulder() {
+        position = deliveryGyroRight.getPosition() - 0.05;
+
+        myOpMode.telemetry.addData("PLUS SHOULDER POS", position);
+        myOpMode.telemetry.update();
+
+        deliveryGyroRight.setPosition(position);
+        deliveryGyroLeft.setPosition(position);
+    }
+
+    public void minusShoulder() {
+//        position  -= 0.05;
+        position = deliveryGyroRight.getPosition() + 0.05;;
+
+        myOpMode.telemetry.addData("MINUS SHOULDER POS", position);
+        myOpMode.telemetry.update();
+
+        deliveryGyroRight.setPosition(position);
+        deliveryGyroLeft.setPosition(position);
+    }
     public enum RobotState {
         MIDDLE_RESTING,
         TRANSFERRED,
@@ -204,4 +265,6 @@ public class Robot {
         AUTO_TOUCH_BAR
     }
     public static DepositPivotState depositPivotState;
+
+
 }
