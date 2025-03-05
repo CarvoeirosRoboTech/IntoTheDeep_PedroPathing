@@ -96,15 +96,15 @@ public class Globals {
     public static double WRIST_READY_TRANSFER = 0.22;
 
     // Deposit Slides
-    public static double MAX_SLIDES_EXTENSION = 1410;
-    public static double SLIDES_PIVOT_READY_EXTENSION = 450;
-    public static double LOW_BUCKET_HEIGHT = -610;
-    public static double HIGH_BUCKET_HEIGHT = -2215;
-    public static double FRONT_HIGH_SPECIMEN_HEIGHT = -960;
-    public static double BACK_HIGH_SPECIMEN_HEIGHT = 850;
-    public static double BACK_HIGH_SPECIMEN_ATTACH_HEIGHT = 1400;
-    public static double AUTO_ASCENT_HEIGHT = 800;
-    public static double ENDGAME_ASCENT_HEIGHT = 1300;
+    public static int MAX_SLIDES_EXTENSION = -2300;
+    public static int SLIDES_PIVOT_READY_EXTENSION = 450;
+    public static int LOW_BUCKET_HEIGHT = -610;
+    public static int HIGH_BUCKET_HEIGHT = -2215;
+    public static int FRONT_HIGH_SPECIMEN_HEIGHT = -960;
+    public static int BACK_HIGH_SPECIMEN_HEIGHT = 850;
+    public static int BACK_HIGH_SPECIMEN_ATTACH_HEIGHT = 1400;
+    public static int AUTO_ASCENT_HEIGHT = 800;
+    public static int ENDGAME_ASCENT_HEIGHT = 1300;
 
     public static double SLIDER_POWER = 0.5;
 
