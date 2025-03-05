@@ -69,6 +69,7 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
     SetDeliveryStatus setDeliveryStatus = SetDeliveryStatus.TRANSFER.MIDDLE.SPECIMEN;
     IntakeStatus intakeStatus = IntakeStatus.TRANSFER.INTAKING;
     Basket basket = Basket.HIGH.LOW;
+    Chamber chamber = Chamber.LOW.HIGH;
     private final Pose startPose = new Pose(0, 0, 0);
 
 
@@ -79,52 +80,52 @@ public class TeleOpcomMaquinasdeEstado extends OpMode {
         follower.setStartingPose(startPose);
 
         //Motores
-        rightElevatorDrive = hardwareMap.get(DcMotor.class, "elevadorDireito"); //EH 0
-        leftElevatorDrive = hardwareMap.get(DcMotor.class, "elevadorEsquerdo"); //EH 1
-        intakeSliderDrive = hardwareMap.get(DcMotor.class, "sliderDrive");      //EH 3
-        intakeDrive = hardwareMap.get(DcMotor.class, "intakeDrive");            //EH 2
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront");                //CH 3
-        leftRear = hardwareMap.get(DcMotor.class, "leftRear");                  //CH 2
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront");              //CH 1
-        rightRear = hardwareMap.get(DcMotor.class, "rightRear");                //CH 0
-
-
-        rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        leftElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeSliderDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        leftElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //Servos
-        deliveryClaw = hardwareMap.get(Servo.class, "deliveryGarra");             //CH Servo 3
-        deliveryGyro = hardwareMap.get(Servo.class, "deliveryGiro");              //CH Servo 2
-        deliveryGyroLeft = hardwareMap.get(Servo.class, "deliveryOmbroEsquerdo"); //CH Servo 0
-        deliveryGyroRight = hardwareMap.get(Servo.class, "deliveryOmbroDireito"); //CH Servo 1
-
-        intakeLeftGyro = hardwareMap.get(Servo.class, "intakeEsquerdo");          //EH Servo 1
-        intakeRightGyro = hardwareMap.get(Servo.class, "intakeDireito");          //EH Servo 0
-
-        handRight = hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
-        handLeft = hardwareMap.get(Servo.class, "hangEsquerdo");                  //CH Servo 2
+//        rightElevatorDrive = hardwareMap.get(DcMotor.class, "elevadorDireito"); //EH 0
+//        leftElevatorDrive = hardwareMap.get(DcMotor.class, "elevadorEsquerdo"); //EH 1
+//        intakeSliderDrive = hardwareMap.get(DcMotor.class, "sliderDrive");      //EH 3
+//        intakeDrive = hardwareMap.get(DcMotor.class, "intakeDrive");            //EH 2
+//        leftFront = hardwareMap.get(DcMotor.class, "leftFront");                //CH 3
+//        leftRear = hardwareMap.get(DcMotor.class, "leftRear");                  //CH 2
+//        rightFront = hardwareMap.get(DcMotor.class, "rightFront");              //CH 1
+//        rightRear = hardwareMap.get(DcMotor.class, "rightRear");                //CH 0
+//
+//
+//        rightElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+//        leftElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+//        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+//        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+//        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
+//        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+//        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+//        leftElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        intakeSliderDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        leftElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightElevatorDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        //Servos
+//        deliveryClaw = hardwareMap.get(Servo.class, "deliveryGarra");             //CH Servo 3
+//        deliveryGyro = hardwareMap.get(Servo.class, "deliveryGiro");              //CH Servo 2
+//        deliveryGyroLeft = hardwareMap.get(Servo.class, "deliveryOmbroEsquerdo"); //CH Servo 0
+//        deliveryGyroRight = hardwareMap.get(Servo.class, "deliveryOmbroDireito"); //CH Servo 1
+//
+//        intakeLeftGyro = hardwareMap.get(Servo.class, "intakeEsquerdo");          //EH Servo 1
+//        intakeRightGyro = hardwareMap.get(Servo.class, "intakeDireito");          //EH Servo 0
+//
+//        handRight = hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
+//        handLeft = hardwareMap.get(Servo.class, "hangEsquerdo");                  //CH Servo 2
 
         deliveryClaw.setPosition(MID_SERVO);
 //        deliveryGyro.setPosition(MID_SERVO);
