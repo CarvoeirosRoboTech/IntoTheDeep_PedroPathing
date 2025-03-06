@@ -39,8 +39,8 @@ public class Globals {
     public static Pose autoEndPose = new Pose(0, 0, Math.toRadians(0));
 
     // Robot Width and Length (in inches)
-    public static double ROBOT_WIDTH = 11.5;
-    public static double ROBOT_LENGTH = 12.25;
+    public static double ROBOT_WIDTH = 13.4;
+    public static double ROBOT_LENGTH = 14.56;
 
     public static double MID_SERVO = 0.5;
 
