@@ -1,5 +1,6 @@
 package hardware;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static hardware.Globals.*;
 
 import com.pedropathing.follower.Follower;
@@ -231,6 +232,15 @@ public class Robot {
 
         deliveryGyroRight.setPosition(position);
         deliveryGyroLeft.setPosition(position);
+    }
+
+    public void manualServo(double joystick) {
+
+        double MANUAL_SERVO = 0.5;
+        double position = MANUAL_SERVO + joystick;
+        myOpMode.telemetry.addData("GARRA HUMAN POS:", position);
+        myOpMode.telemetry.update();
+        deliveryClaw.setPosition(position);
     }
 
     public void minusShoulder() {
