@@ -38,6 +38,18 @@ public class TeleOpFull extends OpMode {
     public void init() {
         Robot.opMODE = OpModeType.TELEOP;
 
+        driver = new Controller(gamepad1);
+        if (driver.leftStickButton.wasJustPressed()) {
+            telemetry.addData("DRIVER PESSIONADO", "");
+            telemetry.update();
+        }
+
+        operator = new Controller(gamepad2);
+        if (operator.leftStickButton.wasJustPressed()) {
+            telemetry.addData("OPERATOR PESSIONADO", "");
+            telemetry.update();
+        }
+
 
         telemetry.addData("OpModeGlobal:", opModeType);
         telemetry.addData("OpModeHardwarePassado:", Robot.opMODE);
