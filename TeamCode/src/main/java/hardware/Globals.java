@@ -52,6 +52,7 @@ public class Globals {
     // Intake Motor
     public static double INTAKE_FORWARD_SPEED = 1.0;
     public static double INTAKE_REVERSE_SPEED = -0.5;
+    public static double INTAKE_STOP = 0;
     public static double INTAKE_HOLD_SPEED = 0.15;
     public static int REVERSE_TIME_MS = 300;
 
@@ -72,6 +73,8 @@ public class Globals {
     public static double INTAKE_PIVOT_INTAKE_POS = 0.735;
     public static double INTAKE_PIVOT_READY_INTAKE_POS = 0.54;
     public static double INTAKE_PIVOT_HOVER_INTAKE_POS = 0.71;
+    public static double INTAKE_PIVOT_TAKING = 0.6;
+    public static double INTAKE_PIVOT_EJECTING = -0.4;
 
     // Intake Extendo
     public static double MAX_EXTENDO_EXTENSION = -2080;

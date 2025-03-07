@@ -6,6 +6,11 @@ import static hardware.Globals.DEPOSIT_PIVOT_SPECIMEN_BACK_SCORING_POS;
 import static hardware.Globals.DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS;
 import static hardware.Globals.FRONT_HIGH_SPECIMEN_HEIGHT;
 import static hardware.Globals.HIGH_BUCKET_HEIGHT;
+import static hardware.Globals.INTAKE_FORWARD_SPEED;
+import static hardware.Globals.INTAKE_PIVOT_EJECTING;
+import static hardware.Globals.INTAKE_PIVOT_TAKING;
+import static hardware.Globals.INTAKE_REVERSE_SPEED;
+import static hardware.Globals.INTAKE_STOP;
 import static hardware.Globals.LOW_BUCKET_HEIGHT;
 import static hardware.Globals.WRIST_FRONT_SPECIMEN_SCORING;
 import static hardware.Globals.WRIST_SCORING;
@@ -13,6 +18,8 @@ import static hardware.Globals.opModeType;
 import static hardware.Robot.deliveryGyro;
 import static hardware.Robot.deliveryGyroLeft;
 import static hardware.Robot.deliveryGyroRight;
+import static hardware.Robot.intakeDrive;
+import static hardware.Robot.intakeLeftGyro;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -73,11 +80,18 @@ public class TeleOpFull extends OpMode {
             }
         }
 
-        if (gamepad1.dpad_left) {
+        if (gamepad2.dpad_left) {
             switch (Robot.intake) {
-                case TAKING:
-
+                case TAKING: {
+                    intakeLeftGyro.setPosition(INTAKE_PIVOT_TAKING);
+                    intakeDrive.setPower(INTAKE_FORWARD_SPEED);
                     break;
+                }
+                case EJECTING: {
+                    intakeLeftGyro.setPosition(INTAKE_PIVOT_EJECTING);
+                    intakeDrive.setPower(INTAKE_STOP);
+                    break;
+                }
             }
         }
 
@@ -118,7 +132,11 @@ public class TeleOpFull extends OpMode {
         }
 
         if (gamepad2.dpad_up) {
+            Robot.intake = INTAKE.TAKING;
+        }
 
+        if (gamepad2.dpad_down) {
+            Robot.intake = INTAKE.EJECTING;
         }
 //        deliveryGyroRight.setPosition(gamepad2.left_stick_x);
 //        deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
