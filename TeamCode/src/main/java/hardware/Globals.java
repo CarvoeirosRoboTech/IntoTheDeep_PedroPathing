@@ -77,10 +77,10 @@ public class Globals {
     public static double DEPOSIT_PIVOT_READY_TRANSFER_POS = 0.90;
     public static double DEPOSIT_PIVOT_MIDDLE_POS = 0.985;
     public static double DEPOSIT_PIVOT_AUTO_BAR_POS = 0.35;
-    public static double DEPOSIT_PIVOT_SCORING_POS = 0.3;
+    public static double DEPOSIT_PIVOT_SCORING_POS = 0.4351;
     public static double DEPOSIT_PIVOT_SPECIMEN_FRONT_INTAKE_POS = 0.03;
     public static double DEPOSIT_PIVOT_SPECIMEN_BACK_INTAKE_POS = 0.83;
-    public static double DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS = 0.20;
+    public static double DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS = 0.35;
     public static double DEPOSIT_PIVOT_SPECIMEN_BACK_SCORING_POS = 0.71;
 
     // 0.84 sec/360° -> 0.828 sec/355° -> 828 milliseconds/355°
@@ -93,7 +93,7 @@ public class Globals {
     public static double DEPOSIT_CLAW_CLOSE_POS = 0;
 
     // Deposit Wrist
-    public static double WRIST_SCORING = 0.37;
+    public static double WRIST_SCORING = 0.40;
     public static double WRIST_AUTO_BAR = 0.3;
     public static double WRIST_FRONT_SPECIMEN_SCORING = 0.60;
     public static double WRIST_BACK_SPECIMEN_SCORING = 0.43;
@@ -104,20 +104,17 @@ public class Globals {
     public static double WRIST_READY_TRANSFER = 0.22;
 
     // Deposit Slides
-    public static int MAX_SLIDES_EXTENSION = -2300;
+    public static int MAX_SLIDES_EXTENSION = 2300;
     public static int SLIDES_PIVOT_READY_EXTENSION = 450;
-    public static int LOW_BUCKET_HEIGHT = -610;
-    public static int HIGH_BUCKET_HEIGHT = -2215;
-    public static int FRONT_HIGH_SPECIMEN_HEIGHT = -960;
+    public static int LOW_BUCKET_HEIGHT = 610;
+    public static int HIGH_BUCKET_HEIGHT = 2215;
+    public static int FRONT_HIGH_SPECIMEN_HEIGHT = 960;
     public static int BACK_HIGH_SPECIMEN_HEIGHT = 850;
     public static int BACK_HIGH_SPECIMEN_ATTACH_HEIGHT = 1400;
     public static int AUTO_ASCENT_HEIGHT = 800;
     public static int ENDGAME_ASCENT_HEIGHT = 1300;
 
-    public static double SLIDER_POWER = 0.5;
-
-    public static double RATIO_FACTOR = 1.3942;
-
+    public static double SLIDER_POWER = 0.8;
     // Hang Servos
     public static double LEFT_HANG_FULL_POWER = 0.9;
     public static double RIGHT_HANG_FULL_POWER = 1.0;

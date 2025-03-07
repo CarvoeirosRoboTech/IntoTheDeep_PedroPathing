@@ -1,11 +1,16 @@
 package opmode.TeleOp;
 //
+import static hardware.Globals.DEPOSIT_PIVOT_SCORING_POS;
+import static hardware.Globals.DEPOSIT_PIVOT_SPECIMEN_BACK_INTAKE_POS;
 import static hardware.Globals.DEPOSIT_PIVOT_SPECIMEN_BACK_SCORING_POS;
 import static hardware.Globals.DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS;
 import static hardware.Globals.FRONT_HIGH_SPECIMEN_HEIGHT;
 import static hardware.Globals.HIGH_BUCKET_HEIGHT;
 import static hardware.Globals.LOW_BUCKET_HEIGHT;
+import static hardware.Globals.WRIST_FRONT_SPECIMEN_SCORING;
+import static hardware.Globals.WRIST_SCORING;
 import static hardware.Globals.opModeType;
+import static hardware.Robot.deliveryGyro;
 import static hardware.Robot.deliveryGyroLeft;
 import static hardware.Robot.deliveryGyroRight;
 
@@ -26,9 +31,6 @@ public class TeleOpFull extends OpMode {
     public void init() {
         Robot.opMODE = OpModeType.TELEOP;
 
-        driver = new Controller(gamepad1);
-        operator = new Controller(gamepad2);
-
 
         telemetry.addData("OpModeGlobal:", opModeType);
         telemetry.addData("OpModeHardwarePassado:", Robot.opMODE);
@@ -40,38 +42,32 @@ public class TeleOpFull extends OpMode {
 
     @Override
     public void start() {
-//        Robot.initHasMovement();
-        driver = new Controller(gamepad1);
     }
 
     @Override
     public void loop() {
-        operator = new Controller(gamepad2);
-
-        if(operator.circle.wasJustPressed()) {
-            telemetry.addData("CONTROLE", "OPERADOR PRECIONADO");
-        }
 
         Robot.follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         Robot.follower.update();
-
-        if (driver.circle.wasJustPressed()) {
-            Robot.setSliderTarget(FRONT_HIGH_SPECIMEN_HEIGHT);
-            telemetry.addData("DRIVER", "PRECIONADO");
-        }
 
         if (gamepad1.cross) {
             switch (Robot.scoring) {
                 case HIGH_BUCKET: {
                     Robot.setSliderTarget(HIGH_BUCKET_HEIGHT);
+                    Robot.setShoulderPos(DEPOSIT_PIVOT_SCORING_POS);
+                    deliveryGyro.setPosition(WRIST_SCORING);
                     break;
                 }
                 case LOW_BUCKET: {
                     Robot.setSliderTarget(LOW_BUCKET_HEIGHT);
+                    Robot.setShoulderPos(DEPOSIT_PIVOT_SCORING_POS);
+                    deliveryGyro.setPosition(WRIST_SCORING);
                     break;
                 }
                 case HIGH_SPECIMEN: {
                     Robot.setSliderTarget(FRONT_HIGH_SPECIMEN_HEIGHT);
+                    Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS);
+                    deliveryGyro.setPosition(WRIST_FRONT_SPECIMEN_SCORING);
                     break;
                 }
             }
@@ -79,6 +75,7 @@ public class TeleOpFull extends OpMode {
 
         if(gamepad1.dpad_up) {
             Robot.scoring = SCORING.HIGH_BUCKET;
+
         }
 
         if(gamepad1.dpad_down) {
@@ -90,7 +87,7 @@ public class TeleOpFull extends OpMode {
         }
 
         if (gamepad1.triangle) {
-            Robot.setDeliveryClaw(Robot.isClawOpen);
+            Robot.setDeliveryClaw();
         }
 
         if (gamepad1.square) {
@@ -101,24 +98,27 @@ public class TeleOpFull extends OpMode {
         }
 
         if (gamepad1.left_bumper) {
-            deliveryGyroRight.setPosition(gamepad2.left_stick_x);
-            deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
+            Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS);
 //            Robot.minusShoulder();
 //            Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS);
         }
 
         if (gamepad1.right_bumper) {
-            deliveryGyroRight.setPosition(gamepad2.left_stick_y);
-            deliveryGyroLeft.setPosition(gamepad2.left_stick_y);
+            Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_BACK_INTAKE_POS);
 //            Robot.plusShoulder();
 //            Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_BACK_SCORING_POS);
         }
-
-        deliveryGyroRight.setPosition(gamepad2.left_stick_x);
-        deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
-
-        deliveryGyroRight.setPosition(gamepad2.left_stick_y);
-        deliveryGyroLeft.setPosition(gamepad2.left_stick_y);
+//
+//        deliveryGyroRight.setPosition(gamepad2.left_stick_x);
+//        deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
+//
+//        deliveryGyro.setPosition(gamepad2.right_stick_x);
+//
+//        telemetry.addData("LEFT SHOULDER POS", deliveryGyroLeft.getPosition());
+//        telemetry.addData("RIGHT SHOULDER POS", deliveryGyroRight.getPosition());
+//
+//        telemetry.addData("DELIVERY GYRO POS", deliveryGyro.getPosition());
+//        telemetry.update();
     }
 
     @Override

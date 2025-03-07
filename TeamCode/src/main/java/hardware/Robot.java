@@ -1,6 +1,5 @@
 package hardware;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static hardware.Globals.*;
 
 import com.pedropathing.follower.Follower;
@@ -18,7 +17,6 @@ import com.qualcomm.robotcore.util.Range;
 import SubSystems.Delivery;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-import pedroPathing.examples.ExampleRobotCentricTeleop;
 
 public class Robot {
     /* Declare OpMode members. */
@@ -88,7 +86,7 @@ public class Robot {
 
 
         rightElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftElevatorDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftElevatorDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -158,6 +156,7 @@ public class Robot {
             follower.setStartingPose(autoEndPose);
 
             setSliderTarget(0);
+            isClawOpen = true;
 
             myOpMode.telemetry.addData(">", "Drive Initialized TELEOP");
             myOpMode.telemetry.update();
@@ -191,12 +190,14 @@ public class Robot {
         myOpMode.telemetry.update();
     }
 
-    public void setDeliveryClaw(boolean clawOpen) {
-        if (clawOpen) {
-            deliveryClaw.setPosition(DEPOSIT_CLAW_OPEN_POS);
+    public void setDeliveryClaw() {
+        isClawOpen = !isClawOpen;
+
+        if (isClawOpen) {
+            deliveryClaw.setPosition(DEPOSIT_CLAW_CLOSE_POS);
             isClawOpen = false;
         } else {
-            deliveryClaw.setPosition(DEPOSIT_CLAW_CLOSE_POS);
+            deliveryClaw.setPosition(DEPOSIT_CLAW_OPEN_POS);
             isClawOpen = true;
         }
     }
