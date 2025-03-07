@@ -73,6 +73,14 @@ public class TeleOpFull extends OpMode {
             }
         }
 
+        if (gamepad1.dpad_left) {
+            switch (Robot.intake) {
+                case TAKING:
+
+                    break;
+            }
+        }
+
         if(gamepad1.dpad_up) {
             Robot.scoring = SCORING.HIGH_BUCKET;
 
@@ -108,7 +116,10 @@ public class TeleOpFull extends OpMode {
 //            Robot.plusShoulder();
 //            Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_BACK_SCORING_POS);
         }
-//
+
+        if (gamepad2.dpad_up) {
+
+        }
 //        deliveryGyroRight.setPosition(gamepad2.left_stick_x);
 //        deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
 //

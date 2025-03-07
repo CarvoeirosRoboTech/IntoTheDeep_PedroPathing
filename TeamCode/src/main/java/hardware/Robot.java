@@ -66,6 +66,7 @@ public class Robot {
 
     public OpModeType opMODE = OpModeType.TELEOP;
     public SCORING scoring = SCORING.HIGH_BUCKET;
+    public INTAKE intake = INTAKE.TAKING;
 
     public boolean isClawOpen = false;
 

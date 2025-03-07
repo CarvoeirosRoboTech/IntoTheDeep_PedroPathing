@@ -28,6 +28,11 @@ public class Globals {
         HIGH_SPECIMEN
     }
 
+    public enum INTAKE {
+        TAKING,
+        EJECTING
+    }
+
     public static SCORING scoring;
 
     public static OpModeType opModeType;
