@@ -69,7 +69,7 @@ public class TeleOpFull extends OpMode {
         Robot.follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         Robot.follower.update();
 
-        if (gamepad1.cross) {
+        if (driver.cross.isPressed()) {
             switch (Robot.scoring) {
                 case HIGH_BUCKET: {
                     Robot.setSliderTarget(HIGH_BUCKET_HEIGHT);
@@ -92,7 +92,7 @@ public class TeleOpFull extends OpMode {
             }
         }
 
-        if (gamepad2.dpad_left) {
+        if (operator.dpadLeft.isPressed()) {
             switch (Robot.intake) {
                 case TAKING: {
                     intakeLeftGyro.setPosition(INTAKE_PIVOT_TAKING);
@@ -107,47 +107,47 @@ public class TeleOpFull extends OpMode {
             }
         }
 
-        if(gamepad1.dpad_up) {
+        if(driver.dpadUp.isPressed()) {
             Robot.scoring = SCORING.HIGH_BUCKET;
 
         }
 
-        if(gamepad1.dpad_down) {
+        if(driver.dpadDown.isPressed()) {
             Robot.scoring = SCORING.LOW_BUCKET;
         }
 
-        if(gamepad1.dpad_right) {
+        if(driver.dpadRight.isPressed()) {
             Robot.scoring = SCORING.HIGH_SPECIMEN;
         }
 
-        if (gamepad1.triangle) {
+        if (driver.triangle.isPressed()) {
             Robot.setDeliveryClaw();
         }
 
-        if (gamepad1.square) {
+        if (driver.square.isPressed()) {
             Robot.setClawOpen(true);
         }
-        if (gamepad1.circle) {
+        if (driver.circle.isPressed()) {
             Robot.setClawOpen(false);
         }
 
-        if (gamepad1.left_bumper) {
+        if (driver.leftBumper.isPressed()) {
             Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS);
 //            Robot.minusShoulder();
 //            Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS);
         }
 
-        if (gamepad1.right_bumper) {
+        if (driver.rightBumper.isPressed()) {
             Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_BACK_INTAKE_POS);
 //            Robot.plusShoulder();
 //            Robot.setShoulderPos(DEPOSIT_PIVOT_SPECIMEN_BACK_SCORING_POS);
         }
 
-        if (gamepad2.dpad_up) {
+        if (operator.dpadUp.isPressed()) {
             Robot.intake = INTAKE.TAKING;
         }
 
-        if (gamepad2.dpad_down) {
+        if (operator.dpadDown.isPressed()) {
             Robot.intake = INTAKE.EJECTING;
         }
 //        deliveryGyroRight.setPosition(gamepad2.left_stick_x);
