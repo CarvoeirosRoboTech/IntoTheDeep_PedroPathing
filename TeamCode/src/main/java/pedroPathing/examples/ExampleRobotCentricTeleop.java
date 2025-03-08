@@ -156,8 +156,8 @@ public class ExampleRobotCentricTeleop extends OpMode {
         if (gamepad1.right_bumper) {
 //            rightElevatorDrive.setTargetPosition(rightElevatorDrive.getCurrentPosition()+100);
 //            leftElevatorDrive.setTargetPosition(leftElevatorDrive.getCurrentPosition()+100);
-            rightElevatorDrive.setTargetPosition(-600);
-            leftElevatorDrive.setTargetPosition(-600);
+//            rightElevatorDrive.setTargetPosition(-600);
+//            leftElevatorDrive.setTargetPosition(-600);
 
             rightElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -167,8 +167,8 @@ public class ExampleRobotCentricTeleop extends OpMode {
         }
 
         if (gamepad1.left_bumper) {
-//            rightElevatorDrive.setTargetPosition(rightElevatorDrive.getCurrentPosition()-100);
-//            leftElevatorDrive.setTargetPosition(leftElevatorDrive.getCurrentPosition()-100);
+            rightElevatorDrive.setTargetPosition(rightElevatorDrive.getCurrentPosition()-100);
+            leftElevatorDrive.setTargetPosition(leftElevatorDrive.getCurrentPosition()-100);
 
             rightElevatorDrive.setTargetPosition(-1200);
             leftElevatorDrive.setTargetPosition(-1200);
@@ -202,7 +202,7 @@ public class ExampleRobotCentricTeleop extends OpMode {
     public void stop() {
     }
 
-
+// 0.68 shoulder
     public void setDeliveryElevatorTarget(int target) {
         rightElevatorDrive.setTargetPosition(target);
         leftElevatorDrive.setTargetPosition(target);
