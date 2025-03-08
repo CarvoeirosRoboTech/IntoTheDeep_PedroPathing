@@ -84,6 +84,10 @@ public class TeleOpFull extends OpMode {
         Robot.follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         Robot.follower.update();
 
+        if (gamepad2.left_bumper){
+            leftElevatorDrive.setPower(time);
+        }
+
         if (gamepad1.cross) {
             switch (Robot.scoring) {
                 case HIGH_BUCKET: {

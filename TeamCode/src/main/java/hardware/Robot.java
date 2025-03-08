@@ -230,11 +230,12 @@ public class Robot {
 //        deliveryGyroLeft.setPosition(newPos);
 //        deliveryGyroLeft.setPosition(newPos);
 
-//        myOpMode.telemetry.addData("passed POS", position);
+
+        myOpMode.telemetry.addData("passed POS", position);
 ////        myOpMode.telemetry.addData("calculated POS", newPos);
-//        myOpMode.telemetry.addData("leftShoulderPOS", deliveryGyroLeft.getPosition());
+        myOpMode.telemetry.addData("leftShoulderPOS", deliveryGyroLeft.getPosition());
 //        myOpMode.telemetry.addData("rightShoulderPOS", deliveryGyroRight.getPosition());
-//        myOpMode.telemetry.update();
+        myOpMode.telemetry.update();
 //        0.94 - shoulder; 0.495 - delivery;
 //        0.28 - delivery; 0.479 - shoulder;
 //        0.34 - delivery; 0.5207 - shoulder;
