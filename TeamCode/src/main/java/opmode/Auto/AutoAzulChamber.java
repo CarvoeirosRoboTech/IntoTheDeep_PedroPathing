@@ -10,12 +10,15 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import hardware.Globals;
+import hardware.Robot;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 @Autonomous (name = "Luan Chamber", group = "Carvoeiros")
 public class AutoAzulChamber extends OpMode {
 
+    hardware.Robot Robot = new Robot(this);
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
 
@@ -127,6 +130,8 @@ public class AutoAzulChamber extends OpMode {
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
+
+        Robot.opMODE = Globals.OpModeType.AUTO;
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();

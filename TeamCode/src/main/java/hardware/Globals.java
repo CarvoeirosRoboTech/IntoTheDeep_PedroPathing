@@ -44,17 +44,17 @@ public class Globals {
     public static Pose autoEndPose = new Pose(0, 0, Math.toRadians(0));
 
     // Robot Width and Length (in inches)
-    public static double ROBOT_WIDTH = 13.4;
-    public static double ROBOT_LENGTH = 14.56;
+//    public static double ROBOT_WIDTH = 13.4;
+//    public static double ROBOT_LENGTH = 14.56;
 
     public static double MID_SERVO = 0.5;
 
     // Intake Motor
-    public static double INTAKE_FORWARD_SPEED = 1.0;
-    public static double INTAKE_REVERSE_SPEED = -0.5;
-    public static double INTAKE_STOP = 0;
-    public static double INTAKE_HOLD_SPEED = 0.15;
-    public static int REVERSE_TIME_MS = 300;
+//    public static double INTAKE_FORWARD_SPEED = 1.0;
+//    public static double INTAKE_REVERSE_SPEED = -0.5;
+//    public static double INTAKE_STOP = 0;
+//    public static double INTAKE_HOLD_SPEED = 0.15;
+//    public static int REVERSE_TIME_MS = 300;
 
     // Intake Color Sensor
     public static double MIN_DISTANCE_THRESHOLD = 1.0;
@@ -69,20 +69,25 @@ public class Globals {
 
     // Intake Pivot
     public static double INTAKE_PIVOT_TRANSFER_POS = 0.05;
-    public static double INTAKE_PIVOT_READY_TRANSFER_POS = 0.25;
+    public static double INTAKE_PIVOT_READY_TRANSFER_POS = 0.32;
     public static double INTAKE_PIVOT_INTAKE_POS = 0.735;
     public static double INTAKE_PIVOT_READY_INTAKE_POS = 0.54;
     public static double INTAKE_PIVOT_HOVER_INTAKE_POS = 0.71;
     public static double INTAKE_PIVOT_TAKING = 0.6;
     public static double INTAKE_PIVOT_EJECTING = -0.4;
+    public static double INTAKE_SLIDER_EJECTING = 450;
+
+    //Intake Motor
+    public static double INTAKE_TAKING_SAMPLE_POWER = 0.8;
+    public static double INTAKE_STOP_TAKING_POWER = -0.8;
 
     // Intake Extendo
-    public static double MAX_EXTENDO_EXTENSION = -2080;
-    public static double MIN_EXTENDO_EXTENSION = 0;
+    public static int MAX_SLIDER_EXTENSION = 1440;
+    public static int MIN_SLIDER_EXTENSION = -5;
 
     // Deposit Pivot
-    public static double DEPOSIT_PIVOT_TRANSFER_POS = 0.94;
-    public static double DEPOSIT_PIVOT_READY_TRANSFER_POS = 0.90;
+    public static double DEPOSIT_PIVOT_TRANSFER_POS = 0.29;
+    public static double DEPOSIT_PIVOT_READY_TRANSFER_POS = 0.94;
     public static double DEPOSIT_PIVOT_MIDDLE_POS = 0.985;
     public static double DEPOSIT_PIVOT_AUTO_BAR_POS = 0.35;
     public static double DEPOSIT_PIVOT_SCORING_POS = 0.4351;
@@ -107,7 +112,7 @@ public class Globals {
     public static double WRIST_BACK_SPECIMEN_SCORING = 0.43;
     public static double WRIST_FRONT_SPECIMEN_INTAKE = 0.3;
     public static double WRIST_BACK_SPECIMEN_INTAKE = 0.485;
-    public static double WRIST_TRANSFER = 0.38;
+    public static double WRIST_TRANSFER = 0.495;
     public static double WRIST_MIDDLE_HOLD = 0.33;
     public static double WRIST_READY_TRANSFER = 0.22;
 
@@ -121,7 +126,6 @@ public class Globals {
     public static int BACK_HIGH_SPECIMEN_ATTACH_HEIGHT = 1400;
     public static int AUTO_ASCENT_HEIGHT = 800;
     public static int ENDGAME_ASCENT_HEIGHT = 1300;
-
     public static double SLIDER_POWER = 0.8;
     // Hang Servos
     public static double LEFT_HANG_FULL_POWER = 0.9;
@@ -130,4 +134,25 @@ public class Globals {
 
     // command timeout
     public final static int MAX_COMMAND_RUN_TIME_MS = 3000;
+
+
+    public final static double INTAKE_GET_SPEED = 1;
+    public final static double INTAKE_OUT_SPEED = -0.5;
+    public final static double INTAKE_STOP = 1;
+    public final static double INTAKE_HOLD_SPEED = 1;
+
+    public static int REVERSE_TIME_MS = 300;
+    public final static double INTAKE_GYRO_TRANSFER_POS = 0.32;
+    public final static double INTAKE_GYRO_GET_POS = 0.6;
+
+    public final static double DEPOSIT_SHOULDER_TRANSFER_POS = 0.94;
+    public final static double DEPOSIT_GYRO_TRANSFER_POS = 0.495;
+
+    public final static double DEPOSIT_GYRO_LOW_BASKET_POS = 0.28;
+    public final static double DEPOSIT_SHOULDER_LOW_BASKET_POS = 0.479;
+    public final static double DEPOSIT_GYRO_HIGH_BASKET_POS = 0.34;
+    public final static double DEPOSIT_SHOULDER_HIGH_BASKET_POS = 0.5207;
+    public final static double DEPOSIT_GYRO_HIGH_SPECIMEN_POS = 0.5;
+    public final static double DEPOSIT_SHOULDER_HIGH_SPECIMEN_POS = 0.5;
+
 }

@@ -1,5 +1,6 @@
 package hardware;
 
+import static java.lang.Thread.sleep;
 import static hardware.Globals.*;
 
 import com.pedropathing.follower.Follower;
@@ -12,9 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
-import SubSystems.Delivery;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
@@ -102,12 +101,9 @@ public class Robot {
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        intakeDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        leftElevatorDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeSliderDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -126,12 +122,11 @@ public class Robot {
         intakeRightGyro = myOpMode.hardwareMap.get(Servo.class, "intakeDireito");          //EH Servo 0
 
         hangRight = myOpMode.hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
-        hangLeft = myOpMode.hardwareMap.get(Servo.class, "hangEsquerdo");                  //CH Servo 2
 
         deliveryClaw.setPosition(MID_SERVO);
         deliveryGyro.setPosition(MID_SERVO);
-        deliveryGyroRight.setPosition(MID_SERVO);
-        deliveryGyroLeft.setPosition(MID_SERVO);
+//        deliveryGyroRight.setPosition(MID_SERVO);
+//        deliveryGyroLeft.setPosition(MID_SERVO);
 //
 //        intakeRightGyro.setPosition(MID_SERVO);
 //        intakeLeftGyro.setPosition(MID_SERVO);
@@ -156,7 +151,8 @@ public class Robot {
             follower.startTeleopDrive();
             follower.setStartingPose(autoEndPose);
 
-            setSliderTarget(0);
+            setElevatorTarget(0);
+            setIntakeSliderTarget(0);
             isClawOpen = true;
 
             myOpMode.telemetry.addData(">", "Drive Initialized TELEOP");
@@ -172,10 +168,7 @@ public class Robot {
 
     }
 
-    public void setSliderTarget(int target) {
-//        target = Range.clip(target, 0, MAX_SLIDES_EXTENSION);
-//        target = target * -1;
-
+    public void setElevatorTarget(int target) {
         myOpMode.telemetry.addData("inside robot target", target);
 
         rightElevatorDrive.setTargetPosition(target);
@@ -188,6 +181,20 @@ public class Robot {
         leftElevatorDrive.setPower(SLIDER_POWER);
 
         myOpMode.telemetry.addData("STATUS", "Moved to position");
+        myOpMode.telemetry.update();
+    }
+
+    public void setIntakeSliderTarget(int target) {
+        myOpMode.telemetry.addData("Given position", target);
+        myOpMode.telemetry.update();
+
+        intakeSliderDrive.setTargetPosition(target);
+
+        intakeSliderDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        intakeSliderDrive.setPower(SLIDER_POWER);
+
+        myOpMode.telemetry.addData("Done positioning at: ", target);
         myOpMode.telemetry.update();
     }
 
@@ -211,6 +218,10 @@ public class Robot {
         }
     }
 
+    public void setClawPos(double position) {
+        deliveryGyro.setPosition(position);
+    }
+
     public void setShoulderPos(double position) {
 //        double newPos = deliveryGyroLeft.getPosition() + position;
 //
@@ -219,41 +230,14 @@ public class Robot {
 //        deliveryGyroLeft.setPosition(newPos);
 //        deliveryGyroLeft.setPosition(newPos);
 
-        myOpMode.telemetry.addData("passed POS", position);
-//        myOpMode.telemetry.addData("calculated POS", newPos);
-        myOpMode.telemetry.addData("leftShoulderPOS", deliveryGyroLeft.getPosition());
-        myOpMode.telemetry.addData("rightShoulderPOS", deliveryGyroRight.getPosition());
-        myOpMode.telemetry.update();
-    }
-
-    public void plusShoulder() {
-        position = deliveryGyroRight.getPosition() - 0.05;
-
-        myOpMode.telemetry.addData("PLUS SHOULDER POS", position);
-        myOpMode.telemetry.update();
-
-        deliveryGyroRight.setPosition(position);
-        deliveryGyroLeft.setPosition(position);
-    }
-
-    public void manualServo(double joystick) {
-
-        double MANUAL_SERVO = 0.5;
-        double position = MANUAL_SERVO + joystick;
-        myOpMode.telemetry.addData("GARRA HUMAN POS:", position);
-        myOpMode.telemetry.update();
-        deliveryClaw.setPosition(position);
-    }
-
-    public void minusShoulder() {
-//        position  -= 0.05;
-        position = deliveryGyroRight.getPosition() + 0.05;;
-
-        myOpMode.telemetry.addData("MINUS SHOULDER POS", position);
-        myOpMode.telemetry.update();
-
-        deliveryGyroRight.setPosition(position);
-        deliveryGyroLeft.setPosition(position);
+//        myOpMode.telemetry.addData("passed POS", position);
+////        myOpMode.telemetry.addData("calculated POS", newPos);
+//        myOpMode.telemetry.addData("leftShoulderPOS", deliveryGyroLeft.getPosition());
+//        myOpMode.telemetry.addData("rightShoulderPOS", deliveryGyroRight.getPosition());
+//        myOpMode.telemetry.update();
+//        0.94 - shoulder; 0.495 - delivery;
+//        0.28 - delivery; 0.479 - shoulder;
+//        0.34 - delivery; 0.5207 - shoulder;
     }
     public enum RobotState {
         MIDDLE_RESTING,
