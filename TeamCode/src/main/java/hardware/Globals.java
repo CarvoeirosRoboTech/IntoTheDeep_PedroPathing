@@ -121,7 +121,7 @@ public class Globals {
     public static int SLIDES_PIVOT_READY_EXTENSION = 450;
     public static int LOW_BUCKET_HEIGHT = 610;
     public static int HIGH_BUCKET_HEIGHT = 2215;
-    public static int FRONT_HIGH_SPECIMEN_HEIGHT = 1505;
+    public static int FRONT_HIGH_SPECIMEN_HEIGHT = 0;
     public static int BACK_HIGH_SPECIMEN_HEIGHT = 850;
     public static int BACK_HIGH_SPECIMEN_ATTACH_HEIGHT = 1400;
     public static int AUTO_ASCENT_HEIGHT = 800;
@@ -148,12 +148,12 @@ public class Globals {
     public final static double DEPOSIT_SHOULDER_TRANSFER_POS = 0.94;
     public final static double DEPOSIT_GYRO_TRANSFER_POS = 0.495;
 
-    public final static double DEPOSIT_GYRO_LOW_BASKET_POS = 0.495;
-    public final static double DEPOSIT_SHOULDER_LOW_BASKET_POS = 0.5977;
-    public final static double DEPOSIT_GYRO_HIGH_BASKET_POS = 0.34;
-    public final static double DEPOSIT_SHOULDER_HIGH_BASKET_POS = 0.2982;
-    public final static double DEPOSIT_GYRO_HIGH_SPECIMEN_POS = 0.2811;
-    public final static double DEPOSIT_SHOULDER_HIGH_SPECIMEN_POS = 0.3153;
+    public final static double DEPOSIT_GYRO_LOW_BASKET_POS = 0.2811;
+    public final static double DEPOSIT_SHOULDER_LOW_BASKET_POS = 0.42;
+    public final static double DEPOSIT_GYRO_HIGH_BASKET_POS = 0.4;
+    public final static double DEPOSIT_SHOULDER_HIGH_BASKET_POS = 0.4478;
+    public final static double DEPOSIT_GYRO_HIGH_SPECIMEN_POS = 0.5122;
+    public final static double DEPOSIT_SHOULDER_HIGH_SPECIMEN_POS = 0.5806;
     public final static double DEPOSIT_GYRO_HUMAN_POS = 0.55;
 
 }

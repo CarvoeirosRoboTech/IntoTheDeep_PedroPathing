@@ -52,7 +52,7 @@ public class TeleOpFull extends OpMode {
 
     @Override
     public void init() {
-//        Robot.opMODE = OpModeType.TELEOP;
+        Robot.opMODE = OpModeType.TELEOP;
 
 //        driver = new Controller(gamepad1);
 //        if (driver.leftStickButton.wasJustPressed()) {
@@ -84,31 +84,36 @@ public class TeleOpFull extends OpMode {
         Robot.follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         Robot.follower.update();
 
-        if (gamepad2.left_bumper){
-            leftElevatorDrive.setPower(time);
-        }
-
         if (gamepad1.cross) {
             switch (Robot.scoring) {
                 case HIGH_BUCKET: {
                     Robot.setElevatorTarget(HIGH_BUCKET_HEIGHT);
                     Robot.setShoulderPos(DEPOSIT_SHOULDER_HIGH_BASKET_POS);
                     Robot.setClawPos(DEPOSIT_GYRO_HIGH_BASKET_POS);
-//                    deliveryGyro.setPosition(WRIST_SCORING);
+                    deliveryGyro.setPosition(WRIST_SCORING);
+
+                    telemetry.addData("HIGH BASKET", "");
+                    telemetry.update();
                     break;
                 }
                 case LOW_BUCKET: {
                     Robot.setElevatorTarget(LOW_BUCKET_HEIGHT);
                     Robot.setShoulderPos(DEPOSIT_SHOULDER_LOW_BASKET_POS);
                     Robot.setClawPos(DEPOSIT_GYRO_LOW_BASKET_POS);
-//                    deliveryGyro.setPosition(WRIST_SCORING);
+                    deliveryGyro.setPosition(WRIST_SCORING);
+
+                    telemetry.addData("LOW BASKET", "");
+                    telemetry.update();
                     break;
                 }
                 case HIGH_SPECIMEN: {
                     Robot.setElevatorTarget(FRONT_HIGH_SPECIMEN_HEIGHT);
                     Robot.setShoulderPos(DEPOSIT_SHOULDER_HIGH_SPECIMEN_POS);
                     Robot.setClawPos(DEPOSIT_GYRO_HIGH_SPECIMEN_POS);
-//                    deliveryGyro.setPosition(WRIST_FRONT_SPECIMEN_SCORING);
+                    deliveryGyro.setPosition(WRIST_FRONT_SPECIMEN_SCORING);
+
+                    telemetry.addData("HIGH SPECIMEN", "");
+                    telemetry.update();
                     break;
                 }
             }
@@ -132,7 +137,6 @@ public class TeleOpFull extends OpMode {
                 case EJECTING: {
                     intakeLeftGyro.setPosition(INTAKE_GYRO_TRANSFER_POS);
                     Robot.setIntakeSliderTarget(MIN_SLIDER_EXTENSION);
-//
                     intakeDrive.setPower(0.1);
 
                     Robot.intake = INTAKE.TAKING;
@@ -144,6 +148,10 @@ public class TeleOpFull extends OpMode {
                 }
             }
         }
+//
+//        if (gamepad1.cross) {
+//            Robot.setClawPos(DEPOSIT_GYRO_HIGH_BASKET_POS);
+//        }
 
         if(gamepad1.dpad_up) {
             Robot.scoring = SCORING.HIGH_BUCKET;
@@ -170,38 +178,33 @@ public class TeleOpFull extends OpMode {
 
         if (gamepad2.cross) {
             intakeLeftGyro.setPosition(INTAKE_GYRO_TRANSFER_POS);
+            Robot.setElevatorTarget(0);
             Robot.setClawPos(DEPOSIT_GYRO_TRANSFER_POS);
             Robot.setShoulderPos(DEPOSIT_SHOULDER_TRANSFER_POS);
         }
 
-        if (gamepad2.triangle) {
-            Robot.setClawPos(DEPOSIT_GYRO_HUMAN_POS);
+        if (gamepad2.dpad_up) {
+            Robot.setShoulderPos(deliveryGyroLeft.getPosition() + 0.01);
         }
 
-//        leftElevatorDrive.setTargetPositio (gamepad2.left_stick_x);
-//        deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
+        if (gamepad2.dpad_down) {
+            Robot.setShoulderPos(deliveryGyroLeft.getPosition() - 0.01);
+        }
+
 
         if (gamepad2.right_bumper) {
-            rightElevatorDrive.setTargetPosition(rightElevatorDrive.getCurrentPosition()+100);
-            leftElevatorDrive.setTargetPosition(rightElevatorDrive.getCurrentPosition()+100);
-
-            rightElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftElevatorDrive.setPower(0.8);
-            rightElevatorDrive.setPower(0.8);
+            Robot.setShoulderPos(deliveryGyro.getPosition() + 0.01);
         }
 
-        if (gamepad2.left_bumper) {
-            rightElevatorDrive.setTargetPosition(rightElevatorDrive.getCurrentPosition()-100);
-            leftElevatorDrive.setTargetPosition(rightElevatorDrive.getCurrentPosition()-100);
-
-            rightElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftElevatorDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftElevatorDrive.setPower(-0.4);
-            rightElevatorDrive.setPower(-0.4);
+        if (gamepad2.right_bumper) {
+            Robot.setShoulderPos(deliveryGyro.getPosition() - 0.01);
         }
+//
+//        if (gamepad2.left_bumper) {
+//            Robot.setClawPos(DEPOSIT_GYRO_HUMAN_POS);
+//        }
+
+        //deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
 
         Robot.setShoulderPos(gamepad2.left_stick_x);
         deliveryGyro.setPosition(gamepad2.right_stick_x);
@@ -212,6 +215,7 @@ public class TeleOpFull extends OpMode {
         telemetry.addData("EL. E. POS:", leftElevatorDrive.getCurrentPosition());
         telemetry.addData("EL. D. POS:", rightElevatorDrive.getCurrentPosition());
 //        telemetry.addData("INTAKE SLIDER POS", intakeSliderDrive.getCurrentPosition());
+        telemetry.addData("GYRO POS:", deliveryGyroLeft.getPosition());
         telemetry.update();
     }
 

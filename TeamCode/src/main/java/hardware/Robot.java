@@ -123,8 +123,8 @@ public class Robot {
 
         hangRight = myOpMode.hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
 
-        deliveryClaw.setPosition(MID_SERVO);
-        deliveryGyro.setPosition(MID_SERVO);
+//        deliveryClaw.setPosition(MID_SERVO);
+//        deliveryGyro.setPosition(MID_SERVO);
 //        deliveryGyroRight.setPosition(MID_SERVO);
 //        deliveryGyroLeft.setPosition(MID_SERVO);
 //
@@ -231,11 +231,11 @@ public class Robot {
 //        deliveryGyroLeft.setPosition(newPos);
 
 
-        myOpMode.telemetry.addData("passed POS", position);
+//        myOpMode.telemetry.addData("passed POS", position);
 ////        myOpMode.telemetry.addData("calculated POS", newPos);
-        myOpMode.telemetry.addData("leftShoulderPOS", deliveryGyroLeft.getPosition());
+//        myOpMode.telemetry.addData("leftShoulderPOS", deliveryGyroLeft.getPosition());
 //        myOpMode.telemetry.addData("rightShoulderPOS", deliveryGyroRight.getPosition());
-        myOpMode.telemetry.update();
+//        myOpMode.telemetry.update();
 //        0.94 - shoulder; 0.495 - delivery;
 //        0.28 - delivery; 0.479 - shoulder;
 //        0.34 - delivery; 0.5207 - shoulder;
