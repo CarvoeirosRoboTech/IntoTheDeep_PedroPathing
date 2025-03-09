@@ -5,40 +5,40 @@ import static hardware.Globals.DEPOSIT_GYRO_HIGH_SPECIMEN_POS;
 import static hardware.Globals.DEPOSIT_GYRO_HUMAN_POS;
 import static hardware.Globals.DEPOSIT_GYRO_LOW_BASKET_POS;
 import static hardware.Globals.DEPOSIT_GYRO_TRANSFER_POS;
-import static hardware.Globals.DEPOSIT_PIVOT_READY_TRANSFER_POS;
-import static hardware.Globals.DEPOSIT_PIVOT_SCORING_POS;
-import static hardware.Globals.DEPOSIT_PIVOT_SPECIMEN_FRONT_SCORING_POS;
-import static hardware.Globals.DEPOSIT_PIVOT_TRANSFER_POS;
 import static hardware.Globals.DEPOSIT_SHOULDER_HIGH_BASKET_POS;
 import static hardware.Globals.DEPOSIT_SHOULDER_HIGH_SPECIMEN_POS;
+import static hardware.Globals.DEPOSIT_SHOULDER_HUMAN_POS;
 import static hardware.Globals.DEPOSIT_SHOULDER_LOW_BASKET_POS;
 import static hardware.Globals.DEPOSIT_SHOULDER_TRANSFER_POS;
 import static hardware.Globals.FRONT_HIGH_SPECIMEN_HEIGHT;
 import static hardware.Globals.HIGH_BUCKET_HEIGHT;
+import static hardware.Globals.INTAKE_GET_SPEED;
 import static hardware.Globals.INTAKE_GYRO_GET_POS;
 import static hardware.Globals.INTAKE_GYRO_TRANSFER_POS;
-import static hardware.Globals.INTAKE_PIVOT_EJECTING;
-import static hardware.Globals.INTAKE_PIVOT_READY_TRANSFER_POS;
+import static hardware.Globals.INTAKE_HOLD_SPEED;
+import static hardware.Globals.INTAKE_OUT_SPEED;
 import static hardware.Globals.INTAKE_PIVOT_TAKING;
+import static hardware.Globals.INTAKE_TAKING_SAMPLE_POWER;
 import static hardware.Globals.LOW_BUCKET_HEIGHT;
 import static hardware.Globals.MAX_SLIDER_EXTENSION;
 import static hardware.Globals.MIN_SLIDER_EXTENSION;
 import static hardware.Globals.WRIST_FRONT_SPECIMEN_SCORING;
 import static hardware.Globals.WRIST_SCORING;
 import static hardware.Globals.opModeType;
-import static hardware.Robot.deliveryClaw;
 import static hardware.Robot.deliveryGyro;
 import static hardware.Robot.deliveryGyroLeft;
 import static hardware.Robot.deliveryGyroRight;
 import static hardware.Robot.intakeDrive;
 import static hardware.Robot.intakeLeftGyro;
-import static hardware.Robot.intakeSliderDrive;
 import static hardware.Robot.leftElevatorDrive;
 import static hardware.Robot.rightElevatorDrive;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import controller.Controller;
 import hardware.Globals.*;
@@ -50,25 +50,25 @@ public class TeleOpFull extends OpMode {
     public Controller driver;
     public Controller operator;
 
+    public Controller getDriver() {
+        return driver;
+    }
+
+    public Controller getOperator() {
+        return operator;
+    }
+
+
+    private Telemetry data;
+
     @Override
     public void init() {
         Robot.opMODE = OpModeType.TELEOP;
 
-//        driver = new Controller(gamepad1);
-//        if (driver.leftStickButton.wasJustPressed()) {
-//            telemetry.addData("DRIVER PESSIONADO", "");
-//            telemetry.update();
-//        }
-//
-//        operator = new Controller(gamepad2);
-//        if (operator.leftStickButton.wasJustPressed()) {
-//            telemetry.addData("OPERATOR PESSIONADO", "");
-//            telemetry.update();
-//        }
+        data = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-
-        telemetry.addData("OpModeGlobal:", opModeType);
-        telemetry.addData("OpModeHardwarePassado:", Robot.opMODE);
+        data.addLine("OpModeGlobal:" + opModeType);
+        data.addLine("OpModeHardwarePassado:" + Robot.opMODE);
 
         Robot.init();
 
@@ -77,6 +77,8 @@ public class TeleOpFull extends OpMode {
 
     @Override
     public void start() {
+        driver = new Controller(gamepad1);
+        operator = new Controller(gamepad2);
     }
 
     @Override
@@ -92,8 +94,8 @@ public class TeleOpFull extends OpMode {
                     Robot.setClawPos(DEPOSIT_GYRO_HIGH_BASKET_POS);
                     deliveryGyro.setPosition(WRIST_SCORING);
 
-                    telemetry.addData("HIGH BASKET", "");
-                    telemetry.update();
+                    data.addLine("HIGH BASKET");
+                    data.update();
                     break;
                 }
                 case LOW_BUCKET: {
@@ -102,8 +104,8 @@ public class TeleOpFull extends OpMode {
                     Robot.setClawPos(DEPOSIT_GYRO_LOW_BASKET_POS);
                     deliveryGyro.setPosition(WRIST_SCORING);
 
-                    telemetry.addData("LOW BASKET", "");
-                    telemetry.update();
+                    data.addLine("LOW BASKET");
+                    data.update();
                     break;
                 }
                 case HIGH_SPECIMEN: {
@@ -112,46 +114,35 @@ public class TeleOpFull extends OpMode {
                     Robot.setClawPos(DEPOSIT_GYRO_HIGH_SPECIMEN_POS);
                     deliveryGyro.setPosition(WRIST_FRONT_SPECIMEN_SCORING);
 
-                    telemetry.addData("HIGH SPECIMEN", "");
-                    telemetry.update();
+                    data.addLine("HIGH SPECIMEN");
+                    data.update();
                     break;
                 }
             }
         }
 
 
-        if (gamepad2.dpad_left) {
+        if (operator.dpadLeft.wasJustPressed()) {
             switch (Robot.intake) {
                 case TAKING: {
                     intakeLeftGyro.setPosition(INTAKE_GYRO_GET_POS);
                     Robot.setIntakeSliderTarget(MAX_SLIDER_EXTENSION);
 
-                    intakeDrive.setPower(0.8);
+                    intakeDrive.setPower(INTAKE_GET_SPEED);
 
                     Robot.intake = INTAKE.EJECTING;
-
-                    telemetry.addData("INDO", "");
-                    telemetry.update();
                     break;
                 }
                 case EJECTING: {
                     intakeLeftGyro.setPosition(INTAKE_GYRO_TRANSFER_POS);
                     Robot.setIntakeSliderTarget(MIN_SLIDER_EXTENSION);
-                    intakeDrive.setPower(0.1);
+                    intakeDrive.setPower(INTAKE_HOLD_SPEED);
 
                     Robot.intake = INTAKE.TAKING;
-
-
-                    telemetry.addData("VOLTANDO", "");
-                    telemetry.update();
                     break;
                 }
             }
         }
-//
-//        if (gamepad1.cross) {
-//            Robot.setClawPos(DEPOSIT_GYRO_HIGH_BASKET_POS);
-//        }
 
         if(gamepad1.dpad_up) {
             Robot.scoring = SCORING.HIGH_BUCKET;
@@ -169,35 +160,55 @@ public class TeleOpFull extends OpMode {
 //            Robot.setDeliveryClaw();
 //        }
 
-        if (gamepad2.square) {
+        if (operator.square.wasJustPressed()) {
             Robot.setClawOpen(true);
         }
-        if (gamepad2.circle) {
+        if (operator.circle.wasJustReleased()) {
             Robot.setClawOpen(false);
         }
 
-        if (gamepad2.cross) {
-            intakeLeftGyro.setPosition(INTAKE_GYRO_TRANSFER_POS);
-            Robot.setElevatorTarget(0);
-            Robot.setClawPos(DEPOSIT_GYRO_TRANSFER_POS);
-            Robot.setShoulderPos(DEPOSIT_SHOULDER_TRANSFER_POS);
+        if (operator.cross.wasJustPressed()) {
+            if (Robot.scoring == SCORING.HIGH_SPECIMEN) {
+                intakeLeftGyro.setPosition(0);
+                Robot.setElevatorTarget(0);
+                Robot.setClawPos(DEPOSIT_GYRO_HUMAN_POS);
+                Robot.setShoulderPos(DEPOSIT_SHOULDER_HUMAN_POS);
+            } else {
+                intakeLeftGyro.setPosition(INTAKE_GYRO_TRANSFER_POS);
+                Robot.setElevatorTarget(0);
+                Robot.setClawPos(DEPOSIT_GYRO_TRANSFER_POS);
+                Robot.setShoulderPos(DEPOSIT_SHOULDER_TRANSFER_POS);
+            }
+
         }
 
-        if (gamepad2.dpad_up) {
+        if (driver.rightBumper.wasJustPressed()) {
+            data.addLine("Entrou Controle Driver");
             Robot.setShoulderPos(deliveryGyroLeft.getPosition() + 0.01);
         }
 
-        if (gamepad2.dpad_down) {
+        if (driver.leftBumper.wasJustPressed()) {
             Robot.setShoulderPos(deliveryGyroLeft.getPosition() - 0.01);
         }
 
 
-        if (gamepad2.right_bumper) {
-            Robot.setShoulderPos(deliveryGyro.getPosition() + 0.01);
+        if (operator.rightBumper.wasJustPressed()) {
+            Robot.setClawPos(deliveryGyro.getPosition() + 0.01);
         }
 
-        if (gamepad2.right_bumper) {
-            Robot.setShoulderPos(deliveryGyro.getPosition() - 0.01);
+        if (operator.leftBumper.wasJustPressed()) {
+            Robot.setClawPos(deliveryGyro.getPosition() - 0.01);
+        }
+
+        if (operator.triangle.wasJustPressed()){
+            int atual = leftElevatorDrive.getCurrentPosition();
+            Robot.setElevatorTarget(atual + 100);
+        }
+
+        if (operator.dpadRight.wasJustPressed()) {
+            intakeLeftGyro.setPosition(INTAKE_GYRO_GET_POS);
+            Robot.setIntakeSliderTarget(MAX_SLIDER_EXTENSION);
+            intakeDrive.setPower(INTAKE_OUT_SPEED);
         }
 //
 //        if (gamepad2.left_bumper) {
@@ -206,17 +217,18 @@ public class TeleOpFull extends OpMode {
 
         //deliveryGyroLeft.setPosition(gamepad2.left_stick_x);
 
-        Robot.setShoulderPos(gamepad2.left_stick_x);
-        deliveryGyro.setPosition(gamepad2.right_stick_x);
+//        Robot.setShoulderPos(gamepad2.left_stick_x);
+//        deliveryGyro.setPosition(gamepad2.right_stick_x);
 //
-        telemetry.addData("DELIVERY GYRO POS", deliveryGyro.getPosition());
-//        telemetry.addData("TRANSFER POS", intakeLeftGyro.getPosition());
-        telemetry.addData("SHOULDER POS", deliveryGyroLeft.getPosition());
-        telemetry.addData("EL. E. POS:", leftElevatorDrive.getCurrentPosition());
-        telemetry.addData("EL. D. POS:", rightElevatorDrive.getCurrentPosition());
-//        telemetry.addData("INTAKE SLIDER POS", intakeSliderDrive.getCurrentPosition());
-        telemetry.addData("GYRO POS:", deliveryGyroLeft.getPosition());
-        telemetry.update();
+        data.addLine("Gyro POS" + deliveryGyro.getPosition());
+        data.addLine("Shoulder POS" + deliveryGyroRight.getPosition());
+        data.addLine("EL. E. POS" + leftElevatorDrive.getCurrentPosition());
+        data.addLine("EL. D. POS" + rightElevatorDrive.getCurrentPosition());
+
+        data.update();
+
+        driver.update();
+        operator.update();
     }
 
     @Override

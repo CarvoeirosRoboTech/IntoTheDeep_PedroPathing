@@ -19,6 +19,7 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import controller.Controller;
@@ -28,7 +29,7 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 
-@TeleOp(name = "TeleOp gyro Servo", group = "Iterative OpMode")
+@TeleOp(name = "TeleOp TESTE CONTROLE", group = "Iterative OpMode")
 public class TeleOpGyro extends OpMode {
     hardware.Robot Robot = new Robot(this);
     public Controller driver;
@@ -36,7 +37,6 @@ public class TeleOpGyro extends OpMode {
 
     @Override
     public void init() {
-
         Robot.opMODE = Globals.OpModeType.TELEOP;
 
         telemetry.addData("INIT", "");
@@ -46,21 +46,23 @@ public class TeleOpGyro extends OpMode {
 
     @Override
     public void start() {
-    }
+        driver = new Controller(gamepad1);
+        operator = new Controller(gamepad2);
 
-    public void SetGiroPos (double pos) {
-        double newPos = deliveryGyroLeft.getPosition() + pos;
-
-        deliveryGyroLeft.setPosition(pos);
-
-        telemetry.addData("POS OMBRO:", "");
-        telemetry.update();
     }
 
     @Override
     public void loop() {
-        if (gamepad1.cross) {
-            SetGiroPos(DEPOSIT_GYRO_HIGH_BASKET_POS);
+        if (driver.cross.wasJustPressed()) {
+            telemetry.addLine("X APERTADO DRIVER");
         }
+
+        if (operator.cross.wasJustPressed()) {
+            telemetry.addLine("X APERTADO OPERADOR");
+        }
+
+
+        driver.update();
+        operator.update();
     }
 }
