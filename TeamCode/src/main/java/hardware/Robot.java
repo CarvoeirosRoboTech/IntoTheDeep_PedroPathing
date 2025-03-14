@@ -59,8 +59,8 @@ public class Robot {
 //    public Limelight3A limelight;
 
     //Follower
-    public Follower follower;
     public PoseUpdater poseUpdater;
+    public Follower follower;
     private final Pose startPose = new Pose(0,0,0);
 
     public OpModeType opMODE = OpModeType.TELEOP;
@@ -123,10 +123,10 @@ public class Robot {
 
         hangRight = myOpMode.hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
 
-        deliveryClaw.setPosition(MID_SERVO);
-        deliveryGyro.setPosition(MID_SERVO);
-        deliveryGyroRight.setPosition(MID_SERVO);
-        deliveryGyroLeft.setPosition(MID_SERVO);
+//        deliveryClaw.setPosition(MID_SERVO);
+//        deliveryGyro.setPosition(MID_SERVO);
+//        deliveryGyroRight.setPosition(MID_SERVO);
+//        deliveryGyroLeft.setPosition(MID_SERVO);
 //
 //        intakeRightGyro.setPosition(MID_SERVO);
 //        intakeLeftGyro.setPosition(MID_SERVO);

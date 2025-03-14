@@ -121,7 +121,7 @@ public class Globals {
     public static int SLIDES_PIVOT_READY_EXTENSION = 450;
     public static int LOW_BUCKET_HEIGHT = 610;
     public static int HIGH_BUCKET_HEIGHT = 2215;
-    public static int FRONT_HIGH_SPECIMEN_HEIGHT = 710;
+    public static int FRONT_HIGH_SPECIMEN_HEIGHT = 910;
     public static int BACK_HIGH_SPECIMEN_HEIGHT = 850;
     public static int BACK_HIGH_SPECIMEN_ATTACH_HEIGHT = 1400;
     public static int AUTO_ASCENT_HEIGHT = 800;
@@ -134,27 +134,21 @@ public class Globals {
 
     // command timeout
     public final static int MAX_COMMAND_RUN_TIME_MS = 3000;
-
-
     public final static double INTAKE_GET_SPEED = 1;
     public final static double INTAKE_OUT_SPEED = -0.5;
     public final static double INTAKE_STOP = 0;
     public final static double INTAKE_HOLD_SPEED = 0.1;
-
     public static int REVERSE_TIME_MS = 300;
     public final static double INTAKE_GYRO_TRANSFER_POS = 0.32;
     public final static double INTAKE_GYRO_GET_POS = 0.6;
-
-    public final static double DEPOSIT_SHOULDER_TRANSFER_POS = 0.8705;
-    public final static double DEPOSIT_GYRO_TRANSFER_POS = 0.50443;
-
+    public final static double DEPOSIT_SHOULDER_TRANSFER_POS = 0.9005;
+    public final static double DEPOSIT_GYRO_TRANSFER_POS = 0.42;
     public final static double DEPOSIT_GYRO_LOW_BASKET_POS = 0.39;
-    public final static double DEPOSIT_SHOULDER_LOW_BASKET_POS = 0.39;
-    public final static double DEPOSIT_GYRO_HIGH_BASKET_POS = 0.36;
-    public final static double DEPOSIT_SHOULDER_HIGH_BASKET_POS = 0.4722;
+    public final static double DEPOSIT_SHOULDER_LOW_BASKET_POS = 0.48;
+    public final static double DEPOSIT_GYRO_HIGH_BASKET_POS = 0.4;
+    public final static double DEPOSIT_SHOULDER_HIGH_BASKET_POS = 0.5316;
     public final static double DEPOSIT_GYRO_HIGH_SPECIMEN_POS = 0.60;
     public final static double DEPOSIT_SHOULDER_HIGH_SPECIMEN_POS = 0.2588;
     public final static double DEPOSIT_GYRO_HUMAN_POS = 0.56;
     public final static double DEPOSIT_SHOULDER_HUMAN_POS = 0.15;
-
 }

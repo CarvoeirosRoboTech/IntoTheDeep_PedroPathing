@@ -193,7 +193,8 @@ public class TeleOpFull extends OpMode {
 
 
         if (operator.rightBumper.wasJustPressed()) {
-            Robot.setClawPos(deliveryGyro.getPosition() + 0.01);
+            Robot.setClawPos(deliveryGyro.getPosition() + 0.01
+            );
         }
 
         if (operator.leftBumper.wasJustPressed()) {
@@ -210,6 +211,7 @@ public class TeleOpFull extends OpMode {
             Robot.setIntakeSliderTarget(MAX_SLIDER_EXTENSION);
             intakeDrive.setPower(INTAKE_OUT_SPEED);
         }
+
 //
 //        if (gamepad2.left_bumper) {
 //            Robot.setClawPos(DEPOSIT_GYRO_HUMAN_POS);

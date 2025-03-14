@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import hardware.Robot;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
@@ -180,6 +181,9 @@ public class ExampleRobotCentricTeleop extends OpMode {
             leftElevatorDrive.setPower(0.8);
         }
 
+        if (gamepad1.dpad_up) {
+            intakeSliderDrive.setTargetPosition(intakeSliderDrive.getCurrentPosition()-10);
+        }
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         follower.update();
 
