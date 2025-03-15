@@ -12,6 +12,8 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import hardware.Globals;
+import hardware.Robot;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
@@ -69,6 +71,8 @@ public class ExampleBucketAuto extends OpMode {
     /* These are our Paths and PathChains that we will define in buildPaths() */
     private Path scorePreload, park;
     private PathChain grabPickup1, grabPickup2, grabPickup3, scorePickup1, scorePickup2, scorePickup3;
+
+    Robot robot = new Robot(this);
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -177,6 +181,7 @@ public class ExampleBucketAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
+                    robot.setElevatorTarget(Globals.HIGH_BUCKET_HEIGHT);
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(grabPickup2,true);
