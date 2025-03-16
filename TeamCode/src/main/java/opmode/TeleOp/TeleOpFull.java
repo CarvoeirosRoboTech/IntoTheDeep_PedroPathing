@@ -25,6 +25,7 @@ import static hardware.Globals.MIN_SLIDER_EXTENSION;
 import static hardware.Globals.WRIST_FRONT_SPECIMEN_SCORING;
 import static hardware.Globals.WRIST_SCORING;
 import static hardware.Globals.opModeType;
+import static hardware.Robot.deliveryClaw;
 import static hardware.Robot.deliveryGyro;
 import static hardware.Robot.deliveryGyroLeft;
 import static hardware.Robot.deliveryGyroRight;
@@ -193,12 +194,13 @@ public class TeleOpFull extends OpMode {
 
 
         if (operator.rightBumper.wasJustPressed()) {
-            Robot.setClawPos(deliveryGyro.getPosition() + 0.01
-            );
+            Robot.setClawPos(deliveryGyro.getPosition() + 0.01);
+//            intakeLeftGyro.setPosition(intakeLeftGyro.getPosition() + 0.01);
         }
 
         if (operator.leftBumper.wasJustPressed()) {
             Robot.setClawPos(deliveryGyro.getPosition() - 0.01);
+//            intakeLeftGyro.setPosition(intakeLeftGyro.getPosition() - 0.01);
         }
 
         if (operator.triangle.wasJustPressed()){
@@ -223,6 +225,8 @@ public class TeleOpFull extends OpMode {
 //        deliveryGyro.setPosition(gamepad2.right_stick_x);
 //
         data.addLine("Gyro POS" + deliveryGyro.getPosition());
+        data.addLine("Intake Gyro POS" + intakeLeftGyro.getPosition());
+        data.addLine("Claw POS" + deliveryClaw.getPosition());
         data.addLine("Shoulder POS" + deliveryGyroRight.getPosition());
         data.addLine("EL. E. POS" + leftElevatorDrive.getCurrentPosition());
         data.addLine("EL. D. POS" + rightElevatorDrive.getCurrentPosition());

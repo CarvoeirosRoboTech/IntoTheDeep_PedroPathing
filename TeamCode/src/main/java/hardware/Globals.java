@@ -102,8 +102,8 @@ public class Globals {
     public static double INTAKE_PIVOT_MOVEMENT_TIME = 497 + 200; // 200 milliseconds of buffer
 
     // Deposit Claw
-    public static double DEPOSIT_CLAW_OPEN_POS = 1;
-    public static double DEPOSIT_CLAW_CLOSE_POS = 0;
+    public static double DEPOSIT_CLAW_OPEN_POS = 0.63;
+    public static double DEPOSIT_CLAW_CLOSE_POS = 0.38;
 
     // Deposit Wrist
     public static double WRIST_SCORING = 0.40;
@@ -139,8 +139,8 @@ public class Globals {
     public final static double INTAKE_STOP = 0;
     public final static double INTAKE_HOLD_SPEED = 0.1;
     public static int REVERSE_TIME_MS = 300;
-    public final static double INTAKE_GYRO_TRANSFER_POS = 0.32;
-    public final static double INTAKE_GYRO_GET_POS = 0.6;
+    public final static double INTAKE_GYRO_TRANSFER_POS = 0.3683;
+    public final static double INTAKE_GYRO_GET_POS = 0.77;
     public final static double DEPOSIT_SHOULDER_TRANSFER_POS = 0.9005;
     public final static double DEPOSIT_GYRO_TRANSFER_POS = 0.42;
     public final static double DEPOSIT_GYRO_LOW_BASKET_POS = 0.39;

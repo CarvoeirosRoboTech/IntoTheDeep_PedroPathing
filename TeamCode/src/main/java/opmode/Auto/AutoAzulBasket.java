@@ -1,5 +1,6 @@
 package opmode.Auto;
 
+import static hardware.Globals.DEPOSIT_CLAW_OPEN_POS;
 import static hardware.Globals.HIGH_BUCKET_HEIGHT;
 
 import com.pedropathing.follower.Follower;
@@ -37,7 +38,7 @@ public class AutoAzulBasket extends OpMode {
      * It is used by the pathUpdate method. */
     private int pathState;
 
-    private final Robot robot = new Robot(this);
+//    public Robot robot;
 
     /* Create and Define Poses + Paths
      * Poses are built with three constructors: x, y, and heading (in Radians).
@@ -86,11 +87,10 @@ public class AutoAzulBasket extends OpMode {
                         // Line 1
                         new BezierCurve(
                                 new Point(8.229, 109.886, Point.CARTESIAN),
-                                new Point(56.571, 130.286, Point.CARTESIAN),
-                                new Point(63.257, 95.143, Point.CARTESIAN)
+                                new Point(48.857, 118.114, Point.CARTESIAN),
+                                new Point(65.657, 95.314, Point.CARTESIAN)
                         )
                 )
-                .addTemporalCallback(1000, Robot.setElevatorTarget(HIGH_BUCKET_HEIGHT))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .build();
 
@@ -103,7 +103,7 @@ public class AutoAzulBasket extends OpMode {
 
         if(!follower.isBusy()) {
             /* Grab Sample */
-            robot.setElevatorTarget(HIGH_BUCKET_HEIGHT);
+//            robot.setElevatorTarget(HIGH_BUCKET_HEIGHT);
             /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
             follower.followPath(parking,true);
 //            setPathState(3);
@@ -130,6 +130,8 @@ public class AutoAzulBasket extends OpMode {
         follower.update();
         autonomousPathUpdate();
 
+//        robot.setClawOpen(true);
+
         // Feedback to Driver Hub
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
@@ -141,6 +143,8 @@ public class AutoAzulBasket extends OpMode {
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
+//        robot = new Robot(this);
+
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();

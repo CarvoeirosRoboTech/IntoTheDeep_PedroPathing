@@ -123,7 +123,7 @@ public class Robot {
 
         hangRight = myOpMode.hardwareMap.get(Servo.class, "hangDireito");                  //CH Servo 5
 
-//        deliveryClaw.setPosition(MID_SERVO);
+        deliveryClaw.setPosition(MID_SERVO);
 //        deliveryGyro.setPosition(MID_SERVO);
 //        deliveryGyroRight.setPosition(MID_SERVO);
 //        deliveryGyroLeft.setPosition(MID_SERVO);
